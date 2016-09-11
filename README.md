@@ -12,12 +12,6 @@ Swift Port of [KNSemiModalViewController](https://github.com/kentnguyen/KNSemiMo
 pod 'SemiModalViewController'
 ```
 
-### Carthage
-
-```
-github "muyexi/SemiModalViewController"
-```
-
 ## Usage
 
 Present view controller:
