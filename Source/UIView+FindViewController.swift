@@ -8,7 +8,7 @@ extension UIView {
     }
   
     func traverseResponderChainForUIViewController() -> AnyObject? {
-        let nextResponder: UIResponder = self.nextResponder()!
+        let nextResponder: UIResponder = self.next!
         
         let isViewController = nextResponder is UIViewController
         let isTabBarController = nextResponder is UITabBarController

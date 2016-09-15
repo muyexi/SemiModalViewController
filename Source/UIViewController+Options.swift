@@ -5,7 +5,7 @@ private var DefaultsOptions = "DefaultsOptions"
 
 extension UIViewController {
   
-    func registerOptions(options: [String: AnyObject]?) {
+    func registerOptions(_ options: [String: Any]?) {
         registerOptions(options, defaults: [
                 SemiModalOptionKey.TraverseParentHierarchy.rawValue : true,
                 SemiModalOptionKey.PushParentBack.rawValue          : false,
@@ -18,14 +18,14 @@ extension UIViewController {
             ])
     }
     
-    func registerOptions(options: [String: AnyObject]?, defaults: [String: AnyObject]) {
+    func registerOptions(_ options: [String: Any]?, defaults: [String: Any]) {
         objc_setAssociatedObject(self, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
         objc_setAssociatedObject(self, &DefaultsOptions, defaults, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
     
-    func optionForKey(optionKey: SemiModalOptionKey) -> AnyObject? {
-        let options = objc_getAssociatedObject(self, &CustomOptions) as? [String: AnyObject]
-        let defaults = objc_getAssociatedObject(self, &DefaultsOptions) as! [String: AnyObject]
+    func optionForKey(_ optionKey: SemiModalOptionKey) -> Any? {
+        let options = objc_getAssociatedObject(self, &CustomOptions) as? [String: Any]
+        let defaults = objc_getAssociatedObject(self, &DefaultsOptions) as! [String: Any]
       
         if options?[optionKey.rawValue] != nil {
             return options?[optionKey.rawValue]

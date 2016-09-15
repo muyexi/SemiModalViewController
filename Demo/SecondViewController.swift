@@ -7,7 +7,7 @@ class SecondViewController: UIViewController {
         
     }
 
-    @IBAction func show(sender: AnyObject) {
+    @IBAction func show(_ sender: AnyObject) {
         let options = [
             SemiModalOptionKey.PushParentBack.rawValue: true
         ]
@@ -15,7 +15,7 @@ class SecondViewController: UIViewController {
         let controller = SecondViewController()
         
         controller.view.height = 200
-        controller.view.backgroundColor = UIColor.redColor()
+        controller.view.backgroundColor = UIColor.red
 
         presentSemiViewController(controller, options: options, completion: {
             print("Completed!")

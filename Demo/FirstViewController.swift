@@ -7,10 +7,10 @@ class FirstViewController: UIViewController {
         
     }
 
-    @IBAction func show(sender: AnyObject) {
-        let view = UIView(frame: UIScreen.mainScreen().bounds)
+    @IBAction func show(_ sender: AnyObject) {
+        let view = UIView(frame: UIScreen.main.bounds)
         view.height = 300
-        view.backgroundColor = UIColor.redColor()
+        view.backgroundColor = UIColor.red
         
         let options = [
             SemiModalOptionKey.PushParentBack.rawValue: true

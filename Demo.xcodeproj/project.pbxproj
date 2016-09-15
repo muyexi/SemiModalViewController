@@ -156,6 +156,7 @@
 				TargetAttributes = {
 					8D642E6D1D79758E00C45795 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -369,6 +370,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = im.muyexi.Demo;
 				PRODUCT_NAME = Demo;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -381,6 +383,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = im.muyexi.Demo;
 				PRODUCT_NAME = Demo;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

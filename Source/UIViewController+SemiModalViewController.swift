@@ -34,16 +34,16 @@ public enum SemiModalTransitionStyle: String {
 
 extension UIViewController {
  
-    public func presentSemiViewController(vc: UIViewController) {
+    public func presentSemiViewController(_ vc: UIViewController) {
         presentSemiViewController(vc, options: nil, completion: nil, dismissBlock: nil)
     }
     
-    public func presentSemiViewController(vc: UIViewController, options: [String: AnyObject]?) {
+    public func presentSemiViewController(_ vc: UIViewController, options: [String: Any]?) {
         presentSemiViewController(vc, options: nil, completion: nil, dismissBlock: nil)
     }
     
-    public func presentSemiViewController(vc: UIViewController,
-                                   options: [String: AnyObject]?,
+    public func presentSemiViewController(_ vc: UIViewController,
+                                   options: [String: Any]?,
                                    completion: (() -> Void)?,
                                    dismissBlock: (() -> Void)?) {
         registerOptions(options)
@@ -56,22 +56,22 @@ extension UIViewController {
         objc_setAssociatedObject(self, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), objc_AssociationPolicy.OBJC_ASSOCIATION_COPY_NONATOMIC)
     
         presentSemiView(vc.view, options: options) {
-            vc.didMoveToParentViewController(targetParentVC)
+            vc.didMove(toParentViewController: targetParentVC)
             vc.endAppearanceTransition()
             
             completion?()
         }
     }
     
-    public func presentSemiView(view: UIView) {
+    public func presentSemiView(_ view: UIView) {
         presentSemiView(view, options: nil, completion: nil)
     }
         
-    public func presentSemiView(view: UIView, options: [String: AnyObject]?) {
+    public func presentSemiView(_ view: UIView, options: [String: Any]?) {
         presentSemiView(view, options: options, completion: nil)
     }
         
-    public func presentSemiView(view: UIView, options: [String: AnyObject]?, completion: (() -> Void)?) {
+    public func presentSemiView(_ view: UIView, options: [String: Any]?, completion: (() -> Void)?) {
         registerOptions(options)
         let target = parentTarget()
         
@@ -81,9 +81,9 @@ extension UIViewController {
         
         objc_setAssociatedObject(view, &semiModalPresentingViewController, self, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(interfaceOrientationDidChange(_:)),
-                                                         name: UIDeviceOrientationDidChangeNotification,
+                                                         name: NSNotification.Name.UIDeviceOrientationDidChange,
                                                          object: nil)
         
         let semiViewHeight = view.frame.size.height
@@ -109,9 +109,9 @@ extension UIViewController {
         }
         
         overlay.frame = target.bounds
-        overlay.backgroundColor = UIColor.blackColor()
-        overlay.userInteractionEnabled = true
-        overlay.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        overlay.backgroundColor = UIColor.black
+        overlay.isUserInteractionEnabled = true
+        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         overlay.tag = semiModalOverlayTag
         
         let screenshot = addOrUpdateParentScreenshotInView(overlay)
@@ -120,10 +120,10 @@ extension UIViewController {
         if optionForKey(.DisableCancel) as! Bool {
             let overlayFrame = CGRect(x: 0, y: 0, width: target.width, height: target.height - semiViewHeight)
             
-            let dismissButton = UIButton(type: .Custom)
-            dismissButton.addTarget(self, action: #selector(dismissSemiModalView), forControlEvents: .TouchUpInside)
-            dismissButton.backgroundColor = UIColor.clearColor()
-            dismissButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+            let dismissButton = UIButton(type: .custom)
+            dismissButton.addTarget(self, action: #selector(dismissSemiModalView), for: .touchUpInside)
+            dismissButton.backgroundColor = UIColor.clear
+            dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             dismissButton.frame = overlayFrame
             dismissButton.tag = semiModalDismissButtonTag
             
@@ -131,17 +131,17 @@ extension UIViewController {
         }
         
         if optionForKey(.PushParentBack) as! Bool {
-            screenshot.layer.addAnimation(self.animationGroupForward(true), forKey: "pushedBackAnimation")
+            screenshot.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
         }
         
-        let duration = optionForKey(.AnimationDuration) as! NSTimeInterval
-        UIView.animateWithDuration(duration) { 
-            screenshot.alpha = self.optionForKey(.ParentAlpha) as! CGFloat
-        }
+        let duration = optionForKey(.AnimationDuration) as! TimeInterval
+        UIView.animate(withDuration: duration, animations: { 
+            screenshot.alpha = CGFloat(self.optionForKey(.ParentAlpha) as! Double)
+        }) 
         
         let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.TransitionStyle) as! String)
         if transitionStyle == SemiModalTransitionStyle.SlideUp {
-           view.frame = CGRectOffset(semiViewFrame, 0, +semiViewHeight)
+           view.frame = semiViewFrame.offsetBy(dx: 0, dy: +semiViewHeight)
         } else {
             view.frame = semiViewFrame
         }
@@ -151,39 +151,39 @@ extension UIViewController {
         }
         
         if UIDevice.isPad() {
-            view.autoresizingMask = [.FlexibleTopMargin, .FlexibleLeftMargin, .FlexibleRightMargin]
+            view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
         }
         
         view.tag = semiModalModalViewTag
         target.addSubview(view)
         
-        view.layer.shadowColor = UIColor.blackColor().CGColor
+        view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: -2)
         view.layer.shadowRadius = 5
-        view.layer.shadowOpacity = optionForKey(.ShadowOpacity)! as! Float
+        view.layer.shadowOpacity = Float(optionForKey(.ShadowOpacity) as! Double)
         view.layer.shouldRasterize = true
-        view.layer.rasterizationScale = UIScreen.mainScreen().scale
+        view.layer.rasterizationScale = UIScreen.main.scale
         
-        UIView.animateWithDuration(duration, animations: {
+        UIView.animate(withDuration: duration, animations: {
             if transitionStyle == SemiModalTransitionStyle.SlideUp {
                 view.frame = semiViewFrame
             } else if transitionStyle == SemiModalTransitionStyle.FadeIn || transitionStyle == SemiModalTransitionStyle.FadeInOut {
                 view.alpha = 1
             }
-        }) { finished in
+        }, completion: { finished in
             if finished {
-                NSNotificationCenter.defaultCenter().postNotificationName(semiModalDidShowNotification, object: self)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: semiModalDidShowNotification), object: self)
                 completion?()
             }
-        }
+        }) 
     }
     
     func parentTargetViewController() -> UIViewController {
         var target: UIViewController = self
         
         if optionForKey(.TraverseParentHierarchy) as! Bool {
-            while target.parentViewController != nil {
-                target = target.parentViewController!
+            while target.parent != nil {
+                target = target.parent!
             }
         }
         
@@ -194,27 +194,27 @@ extension UIViewController {
         return parentTargetViewController().view
     }
     
-    func addOrUpdateParentScreenshotInView(screenshotContainer: UIView) -> UIImageView {
+    func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIImageView {
         let target = parentTarget()
         let semiView = target.viewWithTag(semiModalModalViewTag)
         
-        screenshotContainer.hidden = true
-        semiView?.hidden = true
+        screenshotContainer.isHidden = true
+        semiView?.isHidden = true
         
-        UIGraphicsBeginImageContextWithOptions(target.bounds.size, true, UIScreen.mainScreen().scale)
-        target.drawViewHierarchyInRect(target.bounds, afterScreenUpdates: true)
+        UIGraphicsBeginImageContextWithOptions(target.bounds.size, true, UIScreen.main.scale)
+        target.drawHierarchy(in: target.bounds, afterScreenUpdates: true)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        screenshotContainer.hidden = false
-        semiView?.hidden = false
+        screenshotContainer.isHidden = false
+        semiView?.isHidden = false
         
         var screenshot = screenshotContainer.viewWithTag(semiModalScreenshotTag) as? UIImageView
         if screenshot == nil {
             screenshot = UIImageView(image: image)
             screenshot!.tag = semiModalScreenshotTag
-            screenshot!.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+            screenshot!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             screenshotContainer.addSubview(screenshot!)
         } else {
             screenshot!.image = image
@@ -223,7 +223,7 @@ extension UIViewController {
         return screenshot!
     }
     
-    func interfaceOrientationDidChange(notification: NSNotification) {
+    func interfaceOrientationDidChange(_ notification: Notification) {
         let overlay = parentTarget().viewWithTag(semiModalOverlayTag)
         addOrUpdateParentScreenshotInView(overlay!)
     }
@@ -232,21 +232,21 @@ extension UIViewController {
         dismissSemiModalViewWithCompletion(nil)
     }
     
-    func dismissSemiModalViewWithCompletion(completion: (() -> Void)?) {
+    func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
         let target = parentTarget()
         let modal = target.viewWithTag(semiModalModalViewTag)!
         let overlay = target.viewWithTag(semiModalOverlayTag)!
         
         let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.TransitionStyle) as! String)
-        let duration = optionForKey(.AnimationDuration) as! NSTimeInterval
+        let duration = optionForKey(.AnimationDuration) as! TimeInterval
         
         let vc = objc_getAssociatedObject(self, &semiModalViewController) as? UIViewController
         let dismissBlock = (objc_getAssociatedObject(self, &semiModalDismissBlock) as? ClosureWrapper)?.closure
         
-        vc?.willMoveToParentViewController(nil)
+        vc?.willMove(toParentViewController: nil)
         vc?.beginAppearanceTransition(false, animated: true)
         
-        UIView.animateWithDuration(duration, animations: {
+        UIView.animate(withDuration: duration, animations: {
             if transitionStyle == SemiModalTransitionStyle.SlideUp {
                 if UIDevice.isPad() {
                     modal.frame = CGRect(x: (target.width - modal.width) / 2, y: target.height,
@@ -257,7 +257,7 @@ extension UIViewController {
             } else if transitionStyle == SemiModalTransitionStyle.FadeOut || transitionStyle == SemiModalTransitionStyle.FadeInOut {
                 modal.alpha = 0.0
             }
-        }) { finished in
+        }, completion: { finished in
             overlay.removeFromSuperview()
             modal.removeFromSuperview()
             
@@ -269,25 +269,25 @@ extension UIViewController {
             objc_setAssociatedObject(self, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
             objc_setAssociatedObject(self, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIDeviceOrientationDidChangeNotification, object: nil)
-        }
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        }) 
         
         let screenshot = overlay.subviews.first as! UIImageView
         if optionForKey(.PushParentBack) as! Bool {
-            screenshot.layer.addAnimation(animationGroupForward(false), forKey: "bringForwardAnimation")
+            screenshot.layer.add(animationGroupForward(false), forKey: "bringForwardAnimation")
         }
         
-        UIView.animateWithDuration(duration, animations: { 
+        UIView.animate(withDuration: duration, animations: { 
             screenshot.alpha = 1
-            }) { finished in
+            }, completion: { finished in
                 if finished {
-                    NSNotificationCenter.defaultCenter().postNotificationName(semiModalDismissBlock, object: self)
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: semiModalDismissBlock), object: self)
                     completion?()
                 }
-        }
+        }) 
     }
     
-    func animationGroupForward(forward: Bool) -> CAAnimationGroup {
+    func animationGroupForward(_ forward: Bool) -> CAAnimationGroup {
         var id1 = CATransform3DIdentity
         id1.m34 = 1.0 / -900
         id1 = CATransform3DScale(id1, 0.95, 0.95, 1)
@@ -301,7 +301,7 @@ extension UIViewController {
         var id2 = CATransform3DIdentity
         id2.m34 = id1.m34
         
-        let scale = CGFloat(optionForKey(.ParentScale)! as! Float )
+        let scale = CGFloat(optionForKey(.ParentScale) as! Double)
         if UIDevice.isPad() {
             id2 = CATransform3DTranslate(id2, 0, parentTarget().height * -0.04, 0)
             id2 = CATransform3DScale(id2, scale, scale, 1)
@@ -311,24 +311,24 @@ extension UIViewController {
         }
         
         let animation = CABasicAnimation(keyPath: "transform")
-        animation.toValue = NSValue(CATransform3D: id1)
+        animation.toValue = NSValue(caTransform3D: id1)
         
-        let duration = optionForKey(.AnimationDuration)! as! Double
+        let duration = optionForKey(.AnimationDuration) as! Double
         animation.duration = duration / 2
         animation.fillMode = kCAFillModeForwards
-        animation.removedOnCompletion = false
+        animation.isRemovedOnCompletion = false
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
         
         let animation2 = CABasicAnimation(keyPath: "transform")
-        animation2.toValue = NSValue(CATransform3D: forward ? id2 : CATransform3DIdentity)
+        animation2.toValue = NSValue(caTransform3D: forward ? id2 : CATransform3DIdentity)
         animation2.beginTime = animation.duration
         animation2.duration = animation.duration
         animation2.fillMode = kCAFillModeForwards
-        animation2.removedOnCompletion = false
+        animation2.isRemovedOnCompletion = false
         
         let group = CAAnimationGroup()
         group.fillMode = kCAFillModeForwards
-        group.removedOnCompletion = false
+        group.isRemovedOnCompletion = false
         group.duration = animation.duration * 2
         group.animations = [animation, animation2]
         

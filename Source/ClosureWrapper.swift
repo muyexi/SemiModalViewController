@@ -8,7 +8,7 @@ class ClosureWrapper: NSObject, NSCopying {
         self.closure = closure
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
+    func copy(with zone: NSZone?) -> Any {
         let wrapper: ClosureWrapper = ClosureWrapper()
         
         wrapper.closure = self.closure
