@@ -1,6 +1,6 @@
 PODS:
   - Reveal-iOS-SDK (1.6.2)
-  - SemiModalViewController (0.1)
+  - SemiModalViewController (0.2)
 
 DEPENDENCIES:
   - Reveal-iOS-SDK
@@ -12,7 +12,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
-  SemiModalViewController: 2acddcdf79e95100b2a19ec3217160d58702e642
+  SemiModalViewController: 27b32b0e4e3b3d76ee42285588a009b5727d8061
 
 PODFILE CHECKSUM: e7bddae48f9dc0e3ac4cffbde68d8c83ad4d1220
 
