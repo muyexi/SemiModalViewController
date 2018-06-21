@@ -1,8 +1,10 @@
 import UIKit
-   
-private let semiModalDidShowNotification = "semiModalDidShowNotification"
-private let semiModalDidHideNotification = "semiModalDidHideNotification"
-private let semiModalWasResizedNotification = "semiModalWasResizedNotification"
+
+extension Notification.Name {
+    static let semiModalDidShow = Notification.Name("semiModalDidShow")
+    static let semiModalDidHide = Notification.Name("semiModalDidHide")
+    static let semiModalWasResized = Notification.Name("semiModalWasResized")
+}
 
 private var semiModalViewController = "PaPQC93kjgzUanz"
 private var semiModalDismissBlock = "PaPQC93kjgzUanz"
@@ -172,7 +174,7 @@ extension UIViewController {
             }
         }, completion: { finished in
             if finished {
-                NotificationCenter.default.post(name: Notification.Name(rawValue: semiModalDidShowNotification), object: self)
+                NotificationCenter.default.post(name: .semiModalDidShow, object: self)
                 completion?()
             }
         }) 
