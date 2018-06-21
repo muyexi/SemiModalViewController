@@ -6,9 +6,9 @@ extension Notification.Name {
     static let semiModalWasResized = Notification.Name("semiModalWasResized")
 }
 
-private var semiModalViewController = "PaPQC93kjgzUanz"
-private var semiModalDismissBlock = "PaPQC93kjgzUanz"
-private var semiModalPresentingViewController = "PaPQC93kjgzUanz"
+private var semiModalViewController: Void?
+private var semiModalDismissBlock: Void?
+private var semiModalPresentingViewController: Void?
 
 private let semiModalOverlayTag = 10001
 private let semiModalScreenshotTag = 10002

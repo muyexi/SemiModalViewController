@@ -1,6 +1,6 @@
 import UIKit
 
-var CustomOptions = "CustomOptions"
+private var CustomOptions: Void?
 
 extension UIViewController {
     
