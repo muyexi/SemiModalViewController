@@ -67,46 +67,17 @@ extension UIViewController {
         objc_setAssociatedObject(view, &semiModalPresentingViewController, self, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
         NotificationCenter.default.addObserver(self,
-                                                         selector: #selector(interfaceOrientationDidChange(_:)),
-                                                         name: .UIDeviceOrientationDidChange,
-                                                         object: nil)
+                                               selector: #selector(interfaceOrientationDidChange(_:)),
+                                               name: .UIDeviceOrientationDidChange,
+                                               object: nil)
         
         let semiViewHeight = view.frame.size.height
-        var semiViewFrame: CGRect
+        let semiViewFrame = CGRect(x: 0, y: target.height - semiViewHeight, width: target.width, height: semiViewHeight)
         
-        if UIDevice.isPad() {
-            semiViewFrame = CGRect(x: (target.width - view.width / 2),
-                                   y: (target.height - semiViewHeight),
-                                   width: view.width,
-                                   height: semiViewHeight)
-        } else {
-            semiViewFrame = CGRect(x: 0,
-                                   y: target.height - semiViewHeight,
-                                   width: target.width,
-                                   height: semiViewHeight)
-        }
-        
-        var overlay: UIView
-        if let backgroundView = optionForKey(.backgroundView) as? UIView {
-            overlay = backgroundView
-        } else {
-            overlay = UIView()
-        }
-        
-        overlay.frame = target.bounds
-        overlay.backgroundColor = UIColor.black
-        overlay.isUserInteractionEnabled = true
-        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        overlay.tag = semiModalOverlayTag
-        
-        let screenshot = addOrUpdateParentScreenshotInView(overlay)
+        let overlay = overlayView()
         target.addSubview(overlay)
         
-        if optionForKey(.disableCancel) as! Bool {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissSemiModalView))
-            overlay.addGestureRecognizer(tapGesture)
-        }
-        
+        let screenshot = addOrUpdateParentScreenshotInView(overlay)
         if optionForKey(.pushParentBack) as! Bool {
             screenshot.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
         }
@@ -313,4 +284,24 @@ extension UIViewController {
         return group
     }
 
+    func overlayView() -> UIView {
+        var overlay: UIView
+        if let backgroundView = optionForKey(.backgroundView) as? UIView {
+            overlay = backgroundView
+        } else {
+            overlay = UIView()
+        }
+        
+        overlay.frame = parentTarget().bounds
+        overlay.backgroundColor = UIColor.black
+        overlay.isUserInteractionEnabled = true
+        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        overlay.tag = semiModalOverlayTag
+        
+        if optionForKey(.disableCancel) as! Bool {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissSemiModalView))
+            overlay.addGestureRecognizer(tapGesture)
+        }
+        return overlay
+    }
 }
