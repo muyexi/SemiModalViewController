@@ -196,6 +196,7 @@ extension UIViewController {
         return parentTargetViewController().view
     }
     
+    @discardableResult
     func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIImageView {
         let target = parentTarget()
         let semiView = target.viewWithTag(semiModalModalViewTag)
