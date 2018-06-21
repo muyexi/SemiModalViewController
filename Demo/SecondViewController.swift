@@ -9,10 +9,10 @@ class SecondViewController: UIViewController {
 
     @IBAction func show(_ sender: AnyObject) {
         let options = [
-            SemiModalOptionKey.PushParentBack.rawValue: true
+            SemiModalOptionKey.PushParentBack.rawValue: false
         ]
         
-        let controller = SecondViewController()
+        let controller = UIViewController()
         
         controller.view.height = 200
         controller.view.backgroundColor = UIColor.red
