@@ -36,18 +36,10 @@ public enum SemiModalTransitionStyle: String {
 
 extension UIViewController {
  
-    public func presentSemiViewController(_ vc: UIViewController) {
-        presentSemiViewController(vc, options: nil, completion: nil, dismissBlock: nil)
-    }
-    
-    public func presentSemiViewController(_ vc: UIViewController, options: [SemiModalOption: Any]?) {
-        presentSemiViewController(vc, options: nil, completion: nil, dismissBlock: nil)
-    }
-    
     public func presentSemiViewController(_ vc: UIViewController,
-                                   options: [SemiModalOption: Any]?,
-                                   completion: (() -> Void)?,
-                                   dismissBlock: (() -> Void)?) {
+                                   options: [SemiModalOption: Any]? = nil,
+                                   completion: (() -> Void)? = nil,
+                                   dismissBlock: (() -> Void)? = nil) {
         registerOptions(options)
         let targetParentVC = parentTargetViewController()
         
@@ -65,15 +57,7 @@ extension UIViewController {
         }
     }
     
-    public func presentSemiView(_ view: UIView) {
-        presentSemiView(view, options: nil, completion: nil)
-    }
-        
-    public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]?) {
-        presentSemiView(view, options: options, completion: nil)
-    }
-        
-    public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]?, completion: (() -> Void)?) {
+    public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]? = nil, completion: (() -> Void)? = nil) {
         registerOptions(options)
         let target = parentTarget()
         
