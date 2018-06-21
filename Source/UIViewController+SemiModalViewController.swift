@@ -78,9 +78,6 @@ extension UIViewController {
         targetView.addSubview(overlay)
         
         let screenshot = addOrUpdateParentScreenshotInView(overlay)
-        if optionForKey(.pushParentBack) as! Bool {
-            screenshot.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
-        }
         
         let duration = optionForKey(.animationDuration) as! TimeInterval
         UIView.animate(withDuration: duration, animations: { 
@@ -143,33 +140,24 @@ extension UIViewController {
     }
     
     @discardableResult
-    func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIImageView {
+    func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIView {
         let targetView = parentTargetView()
         let semiView = targetView.viewWithTag(semiModalModalViewTag)
         
         screenshotContainer.isHidden = true
         semiView?.isHidden = true
         
-        UIGraphicsBeginImageContextWithOptions(targetView.bounds.size, true, UIScreen.main.scale)
-        targetView.drawHierarchy(in: targetView.bounds, afterScreenUpdates: true)
+        let snapshotView = targetView.snapshotView(afterScreenUpdates: true)!
+        screenshotContainer.addSubview(snapshotView)
         
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+        if optionForKey(.pushParentBack) as! Bool {
+            snapshotView.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
+        }
         
         screenshotContainer.isHidden = false
         semiView?.isHidden = false
         
-        var screenshot = screenshotContainer.viewWithTag(semiModalScreenshotTag) as? UIImageView
-        if screenshot == nil {
-            screenshot = UIImageView(image: image)
-            screenshot!.tag = semiModalScreenshotTag
-            screenshot!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            screenshotContainer.addSubview(screenshot!)
-        } else {
-            screenshot!.image = image
-        }
-        
-        return screenshot!
+        return snapshotView
     }
     
     func interfaceOrientationDidChange(_ notification: Notification) {
@@ -221,7 +209,7 @@ extension UIViewController {
             NotificationCenter.default.removeObserver(self, name: .UIDeviceOrientationDidChange, object: nil)
         }) 
         
-        let screenshot = overlay.subviews.first as! UIImageView
+        let screenshot = overlay.subviews.first!
         if optionForKey(.pushParentBack) as! Bool {
             screenshot.layer.add(animationGroupForward(false), forKey: "bringForwardAnimation")
         }
