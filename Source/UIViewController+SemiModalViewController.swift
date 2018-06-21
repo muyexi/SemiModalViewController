@@ -296,9 +296,9 @@ extension UIViewController {
         id1 = CATransform3DScale(id1, 0.95, 0.95, 1)
         
         if UIDevice.isPad() {
-            id1 = CATransform3DRotate(id1, 7.5 * CGFloat(M_PI) / 180.0, 1, 0, 0)
+            id1 = CATransform3DRotate(id1, 7.5 * CGFloat(Double.pi) / 180.0, 1, 0, 0)
         } else {
-            id1 = CATransform3DRotate(id1, 15.0 * CGFloat(M_PI) / 180.0, 1, 0, 0)
+            id1 = CATransform3DRotate(id1, 15.0 * CGFloat(Double.pi) / 180.0, 1, 0, 0)
         }
         
         var id2 = CATransform3DIdentity
