@@ -268,7 +268,7 @@ extension UIViewController {
             screenshot.alpha = 1
             }, completion: { finished in
                 if finished {
-                    NotificationCenter.default.post(name: Notification.Name(rawValue: semiModalDismissBlock), object: self)
+                    NotificationCenter.default.post(name: .semiModalDidHide, object: self)
                     completion?()
                 }
         }) 
