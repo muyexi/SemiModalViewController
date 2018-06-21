@@ -58,9 +58,9 @@ extension UIViewController {
     
     public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]? = nil, completion: (() -> Void)? = nil) {
         registerOptions(options)
-        let target = parentTargetView()
+        let targetView = parentTargetView()
         
-        if target.subviews.contains(view) {
+        if targetView.subviews.contains(view) {
             return
         }
         
@@ -72,10 +72,10 @@ extension UIViewController {
                                                object: nil)
         
         let semiViewHeight = view.frame.size.height
-        let semiViewFrame = CGRect(x: 0, y: target.height - semiViewHeight, width: target.width, height: semiViewHeight)
+        let semiViewFrame = CGRect(x: 0, y: targetView.height - semiViewHeight, width: targetView.width, height: semiViewHeight)
         
         let overlay = overlayView()
-        target.addSubview(overlay)
+        targetView.addSubview(overlay)
         
         let screenshot = addOrUpdateParentScreenshotInView(overlay)
         if optionForKey(.pushParentBack) as! Bool {
@@ -103,7 +103,7 @@ extension UIViewController {
         }
         
         view.tag = semiModalModalViewTag
-        target.addSubview(view)
+        targetView.addSubview(view)
         
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: -2)
@@ -127,15 +127,15 @@ extension UIViewController {
     }
     
     func parentTargetViewController() -> UIViewController {
-        var target: UIViewController = self
+        var viewController: UIViewController = self
         
         if optionForKey(.traverseParentHierarchy) as! Bool {
-            while target.parent != nil {
-                target = target.parent!
+            while viewController.parent != nil {
+                viewController = viewController.parent!
             }
         }
         
-        return target
+        return viewController
     }
     
     func parentTargetView() -> UIView {
@@ -144,14 +144,14 @@ extension UIViewController {
     
     @discardableResult
     func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIImageView {
-        let target = parentTargetView()
-        let semiView = target.viewWithTag(semiModalModalViewTag)
+        let targetView = parentTargetView()
+        let semiView = targetView.viewWithTag(semiModalModalViewTag)
         
         screenshotContainer.isHidden = true
         semiView?.isHidden = true
         
-        UIGraphicsBeginImageContextWithOptions(target.bounds.size, true, UIScreen.main.scale)
-        target.drawHierarchy(in: target.bounds, afterScreenUpdates: true)
+        UIGraphicsBeginImageContextWithOptions(targetView.bounds.size, true, UIScreen.main.scale)
+        targetView.drawHierarchy(in: targetView.bounds, afterScreenUpdates: true)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -182,9 +182,9 @@ extension UIViewController {
     }
     
     func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
-        let target = parentTargetView()
-        let modal = target.viewWithTag(semiModalModalViewTag)!
-        let overlay = target.viewWithTag(semiModalOverlayTag)!
+        let targetView = parentTargetView()
+        let modal = targetView.viewWithTag(semiModalModalViewTag)!
+        let overlay = targetView.viewWithTag(semiModalOverlayTag)!
         
         let transitionStyle = optionForKey(.transitionStyle) as! SemiModalTransitionStyle
         let duration = optionForKey(.animationDuration) as! TimeInterval
@@ -198,10 +198,10 @@ extension UIViewController {
         UIView.animate(withDuration: duration, animations: {
             if transitionStyle == .slideUp {
                 if UIDevice.isPad() {
-                    modal.frame = CGRect(x: (target.width - modal.width) / 2, y: target.height,
+                    modal.frame = CGRect(x: (targetView.width - modal.width) / 2, y: targetView.height,
                         width: modal.width, height: modal.height)
                 } else {
-                    modal.frame = CGRect(x: 0, y: target.height, width: modal.width, height: modal.height)
+                    modal.frame = CGRect(x: 0, y: targetView.height, width: modal.width, height: modal.height)
                 }
             } else if transitionStyle == .fadeOut || transitionStyle == .fadeInOut {
                 modal.alpha = 0.0
