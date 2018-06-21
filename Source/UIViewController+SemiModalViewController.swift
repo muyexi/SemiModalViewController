@@ -15,23 +15,23 @@ private let semiModalScreenshotTag = 10002
 private let semiModalModalViewTag = 10003
 private let semiModalDismissButtonTag = 10004
 
-public enum SemiModalOptionKey: String {
-    case TraverseParentHierarchy
-    case PushParentBack
-    case AnimationDuration
-    case ParentAlpha
-    case ParentScale
-    case ShadowOpacity
-    case TransitionStyle
-    case DisableCancel
-    case BackgroundView
+public enum SemiModalOption: String {
+    case traverseParentHierarchy
+    case pushParentBack
+    case animationDuration
+    case parentAlpha
+    case parentScale
+    case shadowOpacity
+    case transitionStyle
+    case disableCancel
+    case backgroundView
 }
 
 public enum SemiModalTransitionStyle: String {
-   case SlideUp
-   case FadeInOut
-   case FadeIn
-   case FadeOut
+   case slideUp
+   case fadeInOut
+   case fadeIn
+   case fadeOut
 }
 
 extension UIViewController {
@@ -104,7 +104,7 @@ extension UIViewController {
         }
         
         var overlay: UIView
-        if let backgroundView = optionForKey(.BackgroundView) as? UIView {
+        if let backgroundView = optionForKey(.backgroundView) as? UIView {
             overlay = backgroundView
         } else {
             overlay = UIView()
@@ -119,7 +119,7 @@ extension UIViewController {
         let screenshot = addOrUpdateParentScreenshotInView(overlay)
         target.addSubview(overlay)
         
-        if optionForKey(.DisableCancel) as! Bool {
+        if optionForKey(.disableCancel) as! Bool {
             let overlayFrame = CGRect(x: 0, y: 0, width: target.width, height: target.height - semiViewHeight)
             
             let dismissButton = UIButton(type: .custom)
@@ -132,23 +132,23 @@ extension UIViewController {
             overlay.addSubview(dismissButton)
         }
         
-        if optionForKey(.PushParentBack) as! Bool {
+        if optionForKey(.pushParentBack) as! Bool {
             screenshot.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
         }
         
-        let duration = optionForKey(.AnimationDuration) as! TimeInterval
+        let duration = optionForKey(.animationDuration) as! TimeInterval
         UIView.animate(withDuration: duration, animations: { 
-            screenshot.alpha = CGFloat(self.optionForKey(.ParentAlpha) as! Double)
+            screenshot.alpha = CGFloat(self.optionForKey(.parentAlpha) as! Double)
         }) 
         
-        let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.TransitionStyle) as! String)
-        if transitionStyle == SemiModalTransitionStyle.SlideUp {
+        let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.transitionStyle) as! String)
+        if transitionStyle == SemiModalTransitionStyle.slideUp {
            view.frame = semiViewFrame.offsetBy(dx: 0, dy: +semiViewHeight)
         } else {
             view.frame = semiViewFrame
         }
         
-        if transitionStyle == SemiModalTransitionStyle.FadeIn || transitionStyle == SemiModalTransitionStyle.FadeOut {
+        if transitionStyle == SemiModalTransitionStyle.fadeIn || transitionStyle == SemiModalTransitionStyle.fadeOut {
             view.alpha = 0
         }
         
@@ -162,14 +162,14 @@ extension UIViewController {
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: -2)
         view.layer.shadowRadius = 5
-        view.layer.shadowOpacity = Float(optionForKey(.ShadowOpacity) as! Double)
+        view.layer.shadowOpacity = Float(optionForKey(.shadowOpacity) as! Double)
         view.layer.shouldRasterize = true
         view.layer.rasterizationScale = UIScreen.main.scale
         
         UIView.animate(withDuration: duration, animations: {
-            if transitionStyle == SemiModalTransitionStyle.SlideUp {
+            if transitionStyle == SemiModalTransitionStyle.slideUp {
                 view.frame = semiViewFrame
-            } else if transitionStyle == SemiModalTransitionStyle.FadeIn || transitionStyle == SemiModalTransitionStyle.FadeInOut {
+            } else if transitionStyle == SemiModalTransitionStyle.fadeIn || transitionStyle == SemiModalTransitionStyle.fadeInOut {
                 view.alpha = 1
             }
         }, completion: { finished in
@@ -183,7 +183,7 @@ extension UIViewController {
     func parentTargetViewController() -> UIViewController {
         var target: UIViewController = self
         
-        if optionForKey(.TraverseParentHierarchy) as! Bool {
+        if optionForKey(.traverseParentHierarchy) as! Bool {
             while target.parent != nil {
                 target = target.parent!
             }
@@ -240,8 +240,8 @@ extension UIViewController {
         let modal = target.viewWithTag(semiModalModalViewTag)!
         let overlay = target.viewWithTag(semiModalOverlayTag)!
         
-        let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.TransitionStyle) as! String)
-        let duration = optionForKey(.AnimationDuration) as! TimeInterval
+        let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.transitionStyle) as! String)
+        let duration = optionForKey(.animationDuration) as! TimeInterval
         
         let vc = objc_getAssociatedObject(self, &semiModalViewController) as? UIViewController
         let dismissBlock = (objc_getAssociatedObject(self, &semiModalDismissBlock) as? ClosureWrapper)?.closure
@@ -250,14 +250,14 @@ extension UIViewController {
         vc?.beginAppearanceTransition(false, animated: true)
         
         UIView.animate(withDuration: duration, animations: {
-            if transitionStyle == SemiModalTransitionStyle.SlideUp {
+            if transitionStyle == SemiModalTransitionStyle.slideUp {
                 if UIDevice.isPad() {
                     modal.frame = CGRect(x: (target.width - modal.width) / 2, y: target.height,
                         width: modal.width, height: modal.height)
                 } else {
                     modal.frame = CGRect(x: 0, y: target.height, width: modal.width, height: modal.height)
                 }
-            } else if transitionStyle == SemiModalTransitionStyle.FadeOut || transitionStyle == SemiModalTransitionStyle.FadeInOut {
+            } else if transitionStyle == SemiModalTransitionStyle.fadeOut || transitionStyle == SemiModalTransitionStyle.fadeInOut {
                 modal.alpha = 0.0
             }
         }, completion: { finished in
@@ -276,7 +276,7 @@ extension UIViewController {
         }) 
         
         let screenshot = overlay.subviews.first as! UIImageView
-        if optionForKey(.PushParentBack) as! Bool {
+        if optionForKey(.pushParentBack) as! Bool {
             screenshot.layer.add(animationGroupForward(false), forKey: "bringForwardAnimation")
         }
         
@@ -304,7 +304,7 @@ extension UIViewController {
         var id2 = CATransform3DIdentity
         id2.m34 = id1.m34
         
-        let scale = CGFloat(optionForKey(.ParentScale) as! Double)
+        let scale = CGFloat(optionForKey(.parentScale) as! Double)
         if UIDevice.isPad() {
             id2 = CATransform3DTranslate(id2, 0, parentTarget().height * -0.04, 0)
             id2 = CATransform3DScale(id2, scale, scale, 1)
@@ -316,7 +316,7 @@ extension UIViewController {
         let animation = CABasicAnimation(keyPath: "transform")
         animation.toValue = NSValue(caTransform3D: id1)
         
-        let duration = optionForKey(.AnimationDuration) as! Double
+        let duration = optionForKey(.animationDuration) as! Double
         animation.duration = duration / 2
         animation.fillMode = kCAFillModeForwards
         animation.isRemovedOnCompletion = false

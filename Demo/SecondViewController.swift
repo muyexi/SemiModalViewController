@@ -9,7 +9,7 @@ class SecondViewController: UIViewController {
 
     @IBAction func show(_ sender: AnyObject) {
         let options = [
-            SemiModalOptionKey.PushParentBack.rawValue: false
+            SemiModalOption.pushParentBack.rawValue: false
         ]
         
         let controller = UIViewController()

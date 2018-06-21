@@ -7,14 +7,14 @@ extension UIViewController {
   
     func registerOptions(_ options: [String: Any]?) {
         registerOptions(options, defaults: [
-                SemiModalOptionKey.TraverseParentHierarchy.rawValue : true,
-                SemiModalOptionKey.PushParentBack.rawValue          : false,
-                SemiModalOptionKey.AnimationDuration.rawValue       : 0.5,
-                SemiModalOptionKey.ParentAlpha.rawValue             : 0.5,
-                SemiModalOptionKey.ParentScale.rawValue             : 0.8,
-                SemiModalOptionKey.ShadowOpacity.rawValue           : 0.5,
-                SemiModalOptionKey.TransitionStyle.rawValue         : SemiModalTransitionStyle.SlideUp.rawValue,
-                SemiModalOptionKey.DisableCancel.rawValue           : true
+                SemiModalOption.traverseParentHierarchy.rawValue : true,
+                SemiModalOption.pushParentBack.rawValue          : false,
+                SemiModalOption.animationDuration.rawValue       : 0.5,
+                SemiModalOption.parentAlpha.rawValue             : 0.5,
+                SemiModalOption.parentScale.rawValue             : 0.8,
+                SemiModalOption.shadowOpacity.rawValue           : 0.5,
+                SemiModalOption.transitionStyle.rawValue         : SemiModalTransitionStyle.slideUp.rawValue,
+                SemiModalOption.disableCancel.rawValue           : true
             ])
     }
     
@@ -23,7 +23,7 @@ extension UIViewController {
         objc_setAssociatedObject(self, &DefaultsOptions, defaults, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
     
-    func optionForKey(_ optionKey: SemiModalOptionKey) -> Any? {
+    func optionForKey(_ optionKey: SemiModalOption) -> Any? {
         let options = objc_getAssociatedObject(self, &CustomOptions) as? [String: Any]
         let defaults = objc_getAssociatedObject(self, &DefaultsOptions) as! [String: Any]
       
