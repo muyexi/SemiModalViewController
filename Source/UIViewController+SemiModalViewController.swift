@@ -45,8 +45,8 @@ extension UIViewController {
         targetParentVC.addChildViewController(vc)
         vc.beginAppearanceTransition(true, animated: true)
         
-        objc_setAssociatedObject(self, &semiModalViewController, vc, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), objc_AssociationPolicy.OBJC_ASSOCIATION_COPY_NONATOMIC)
+        objc_setAssociatedObject(self, &semiModalViewController, vc, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), .OBJC_ASSOCIATION_COPY_NONATOMIC)
     
         presentSemiView(vc.view, options: options) {
             vc.didMove(toParentViewController: targetParentVC)
@@ -64,11 +64,11 @@ extension UIViewController {
             return
         }
         
-        objc_setAssociatedObject(view, &semiModalPresentingViewController, self, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(view, &semiModalPresentingViewController, self, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(interfaceOrientationDidChange(_:)),
-                                                         name: NSNotification.Name.UIDeviceOrientationDidChange,
+                                                         name: .UIDeviceOrientationDidChange,
                                                          object: nil)
         
         let semiViewHeight = view.frame.size.height
@@ -247,7 +247,7 @@ extension UIViewController {
             objc_setAssociatedObject(self, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
             objc_setAssociatedObject(self, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+            NotificationCenter.default.removeObserver(self, name: .UIDeviceOrientationDidChange, object: nil)
         }) 
         
         let screenshot = overlay.subviews.first as! UIImageView
