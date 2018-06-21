@@ -13,7 +13,7 @@ class FirstViewController: UIViewController {
         view.backgroundColor = UIColor.red
         
         let options = [
-            SemiModalOption.pushParentBack.rawValue: true
+            SemiModalOption.pushParentBack: true
         ]
         
         presentSemiView(view, options: options) {

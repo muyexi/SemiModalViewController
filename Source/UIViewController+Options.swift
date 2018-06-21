@@ -5,32 +5,32 @@ private var DefaultsOptions = "DefaultsOptions"
 
 extension UIViewController {
   
-    func registerOptions(_ options: [String: Any]?) {
+    func registerOptions(_ options: [SemiModalOption: Any]?) {
         registerOptions(options, defaults: [
-                SemiModalOption.traverseParentHierarchy.rawValue : true,
-                SemiModalOption.pushParentBack.rawValue          : false,
-                SemiModalOption.animationDuration.rawValue       : 0.5,
-                SemiModalOption.parentAlpha.rawValue             : 0.5,
-                SemiModalOption.parentScale.rawValue             : 0.8,
-                SemiModalOption.shadowOpacity.rawValue           : 0.5,
-                SemiModalOption.transitionStyle.rawValue         : SemiModalTransitionStyle.slideUp.rawValue,
-                SemiModalOption.disableCancel.rawValue           : true
+                .traverseParentHierarchy : true,
+                .pushParentBack          : false,
+                .animationDuration       : 0.5,
+                .parentAlpha             : 0.5,
+                .parentScale             : 0.8,
+                .shadowOpacity           : 0.5,
+                .transitionStyle         : SemiModalTransitionStyle.slideUp,
+                .disableCancel           : true
             ])
     }
     
-    func registerOptions(_ options: [String: Any]?, defaults: [String: Any]) {
+    func registerOptions(_ options: [SemiModalOption: Any]?, defaults: [SemiModalOption: Any]) {
         objc_setAssociatedObject(self, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
         objc_setAssociatedObject(self, &DefaultsOptions, defaults, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
     
     func optionForKey(_ optionKey: SemiModalOption) -> Any? {
-        let options = objc_getAssociatedObject(self, &CustomOptions) as? [String: Any]
-        let defaults = objc_getAssociatedObject(self, &DefaultsOptions) as! [String: Any]
+        let options = objc_getAssociatedObject(self, &CustomOptions) as? [SemiModalOption: Any]
+        let defaults = objc_getAssociatedObject(self, &DefaultsOptions) as? [SemiModalOption: Any]
       
-        if options?[optionKey.rawValue] != nil {
-            return options?[optionKey.rawValue]
+        if options?[optionKey] != nil {
+            return options?[optionKey]
         } else {
-            return defaults[optionKey.rawValue]
+            return defaults?[optionKey]
         }
     }
 

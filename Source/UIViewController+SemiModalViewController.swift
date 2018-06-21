@@ -40,12 +40,12 @@ extension UIViewController {
         presentSemiViewController(vc, options: nil, completion: nil, dismissBlock: nil)
     }
     
-    public func presentSemiViewController(_ vc: UIViewController, options: [String: Any]?) {
+    public func presentSemiViewController(_ vc: UIViewController, options: [SemiModalOption: Any]?) {
         presentSemiViewController(vc, options: nil, completion: nil, dismissBlock: nil)
     }
     
     public func presentSemiViewController(_ vc: UIViewController,
-                                   options: [String: Any]?,
+                                   options: [SemiModalOption: Any]?,
                                    completion: (() -> Void)?,
                                    dismissBlock: (() -> Void)?) {
         registerOptions(options)
@@ -69,11 +69,11 @@ extension UIViewController {
         presentSemiView(view, options: nil, completion: nil)
     }
         
-    public func presentSemiView(_ view: UIView, options: [String: Any]?) {
+    public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]?) {
         presentSemiView(view, options: options, completion: nil)
     }
         
-    public func presentSemiView(_ view: UIView, options: [String: Any]?, completion: (() -> Void)?) {
+    public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]?, completion: (() -> Void)?) {
         registerOptions(options)
         let target = parentTarget()
         
@@ -141,14 +141,14 @@ extension UIViewController {
             screenshot.alpha = CGFloat(self.optionForKey(.parentAlpha) as! Double)
         }) 
         
-        let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.transitionStyle) as! String)
-        if transitionStyle == SemiModalTransitionStyle.slideUp {
+        let transitionStyle = optionForKey(.transitionStyle) as! SemiModalTransitionStyle
+        if transitionStyle == .slideUp {
            view.frame = semiViewFrame.offsetBy(dx: 0, dy: +semiViewHeight)
         } else {
             view.frame = semiViewFrame
         }
         
-        if transitionStyle == SemiModalTransitionStyle.fadeIn || transitionStyle == SemiModalTransitionStyle.fadeOut {
+        if transitionStyle == .fadeIn || transitionStyle == .fadeOut {
             view.alpha = 0
         }
         
@@ -167,9 +167,9 @@ extension UIViewController {
         view.layer.rasterizationScale = UIScreen.main.scale
         
         UIView.animate(withDuration: duration, animations: {
-            if transitionStyle == SemiModalTransitionStyle.slideUp {
+            if transitionStyle == .slideUp {
                 view.frame = semiViewFrame
-            } else if transitionStyle == SemiModalTransitionStyle.fadeIn || transitionStyle == SemiModalTransitionStyle.fadeInOut {
+            } else if transitionStyle == .fadeIn || transitionStyle == .fadeInOut {
                 view.alpha = 1
             }
         }, completion: { finished in
@@ -240,7 +240,7 @@ extension UIViewController {
         let modal = target.viewWithTag(semiModalModalViewTag)!
         let overlay = target.viewWithTag(semiModalOverlayTag)!
         
-        let transitionStyle = SemiModalTransitionStyle.init(rawValue: optionForKey(.transitionStyle) as! String)
+        let transitionStyle = optionForKey(.transitionStyle) as! SemiModalTransitionStyle
         let duration = optionForKey(.animationDuration) as! TimeInterval
         
         let vc = objc_getAssociatedObject(self, &semiModalViewController) as? UIViewController
@@ -250,14 +250,14 @@ extension UIViewController {
         vc?.beginAppearanceTransition(false, animated: true)
         
         UIView.animate(withDuration: duration, animations: {
-            if transitionStyle == SemiModalTransitionStyle.slideUp {
+            if transitionStyle == .slideUp {
                 if UIDevice.isPad() {
                     modal.frame = CGRect(x: (target.width - modal.width) / 2, y: target.height,
                         width: modal.width, height: modal.height)
                 } else {
                     modal.frame = CGRect(x: 0, y: target.height, width: modal.width, height: modal.height)
                 }
-            } else if transitionStyle == SemiModalTransitionStyle.fadeOut || transitionStyle == SemiModalTransitionStyle.fadeInOut {
+            } else if transitionStyle == .fadeOut || transitionStyle == .fadeInOut {
                 modal.alpha = 0.0
             }
         }, completion: { finished in
