@@ -13,7 +13,6 @@ private var semiModalPresentingViewController: Void?
 private let semiModalOverlayTag = 10001
 private let semiModalScreenshotTag = 10002
 private let semiModalModalViewTag = 10003
-private let semiModalDismissButtonTag = 10004
 
 public enum SemiModalOption: String {
     case traverseParentHierarchy
@@ -104,16 +103,8 @@ extension UIViewController {
         target.addSubview(overlay)
         
         if optionForKey(.disableCancel) as! Bool {
-            let overlayFrame = CGRect(x: 0, y: 0, width: target.width, height: target.height - semiViewHeight)
-            
-            let dismissButton = UIButton(type: .custom)
-            dismissButton.addTarget(self, action: #selector(dismissSemiModalView), for: .touchUpInside)
-            dismissButton.backgroundColor = UIColor.clear
-            dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            dismissButton.frame = overlayFrame
-            dismissButton.tag = semiModalDismissButtonTag
-            
-            overlay.addSubview(dismissButton)
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissSemiModalView))
+            overlay.addGestureRecognizer(tapGesture)
         }
         
         if optionForKey(.pushParentBack) as! Bool {
