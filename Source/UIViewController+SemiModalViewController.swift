@@ -58,7 +58,7 @@ extension UIViewController {
     
     public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]? = nil, completion: (() -> Void)? = nil) {
         registerOptions(options)
-        let target = parentTarget()
+        let target = parentTargetView()
         
         if target.subviews.contains(view) {
             return
@@ -138,13 +138,13 @@ extension UIViewController {
         return target
     }
     
-    func parentTarget() -> UIView {
+    func parentTargetView() -> UIView {
         return parentTargetViewController().view
     }
     
     @discardableResult
     func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIImageView {
-        let target = parentTarget()
+        let target = parentTargetView()
         let semiView = target.viewWithTag(semiModalModalViewTag)
         
         screenshotContainer.isHidden = true
@@ -173,7 +173,7 @@ extension UIViewController {
     }
     
     func interfaceOrientationDidChange(_ notification: Notification) {
-        let overlay = parentTarget().viewWithTag(semiModalOverlayTag)
+        let overlay = parentTargetView().viewWithTag(semiModalOverlayTag)
         addOrUpdateParentScreenshotInView(overlay!)
     }
     
@@ -182,7 +182,7 @@ extension UIViewController {
     }
     
     func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
-        let target = parentTarget()
+        let target = parentTargetView()
         let modal = target.viewWithTag(semiModalModalViewTag)!
         let overlay = target.viewWithTag(semiModalOverlayTag)!
         
@@ -252,10 +252,10 @@ extension UIViewController {
         
         let scale = CGFloat(optionForKey(.parentScale) as! Double)
         if UIDevice.isPad() {
-            id2 = CATransform3DTranslate(id2, 0, parentTarget().height * -0.04, 0)
+            id2 = CATransform3DTranslate(id2, 0, parentTargetView().height * -0.04, 0)
             id2 = CATransform3DScale(id2, scale, scale, 1)
         } else {
-            id2 = CATransform3DTranslate(id2, 0, parentTarget().height * -0.08, 0)
+            id2 = CATransform3DTranslate(id2, 0, parentTargetView().height * -0.08, 0)
             id2 = CATransform3DScale(id2, scale, scale, 1)
         }
         
@@ -292,7 +292,7 @@ extension UIViewController {
             overlay = UIView()
         }
         
-        overlay.frame = parentTarget().bounds
+        overlay.frame = parentTargetView().bounds
         overlay.backgroundColor = UIColor.black
         overlay.isUserInteractionEnabled = true
         overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
