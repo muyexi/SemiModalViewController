@@ -12,7 +12,7 @@ Swift Port of [KNSemiModalViewController](https://github.com/kentnguyen/KNSemiMo
 
 ### CocoaPods
 
-```
+```swift
 pod 'SemiModalViewController'
 ```
 
@@ -20,7 +20,7 @@ pod 'SemiModalViewController'
 
 Present view controller:
 
-```
+```swift
 let options = [
     SemiModalOptionKey.PushParentBack.rawValue: true
 ]
@@ -39,19 +39,19 @@ presentSemiViewController(controller, options: options, completion: {
 
 Or view:
 
-```
+```swift
 let view = UIView(frame: UIScreen.mainScreen().bounds)
 view.height = 300
 view.backgroundColor = UIColor.redColor()
 
 presentSemiView(view, options: options) {
-    print("Completed!")            
+    print("Completed!")
 }
 ```
 
 Default options:
 
-```
+```swift
 SemiModalOptionKey.TraverseParentHierarchy.rawValue : true,
 SemiModalOptionKey.PushParentBack.rawValue          : false,
 SemiModalOptionKey.AnimationDuration.rawValue       : 0.5,
