@@ -167,12 +167,12 @@ extension UIViewController {
         return snapshotView!
     }
     
-    func interfaceOrientationDidChange(_ notification: Notification) {
+    @objc func interfaceOrientationDidChange(_ notification: Notification) {
         let overlay = parentTargetView().viewWithTag(semiModalOverlayTag)
         addOrUpdateParentScreenshotInView(overlay!)
     }
     
-    func dismissSemiModalView() {
+    @objc func dismissSemiModalView() {
         dismissSemiModalViewWithCompletion(nil)
     }
     
