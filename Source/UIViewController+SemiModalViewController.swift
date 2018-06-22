@@ -147,17 +147,22 @@ extension UIViewController {
         screenshotContainer.isHidden = true
         semiView?.isHidden = true
         
-        let snapshotView = targetView.snapshotView(afterScreenUpdates: true)!
-        screenshotContainer.addSubview(snapshotView)
+        var snapshotView = screenshotContainer.viewWithTag(semiModalScreenshotTag)
+        snapshotView?.removeFromSuperview()
+        
+        snapshotView = targetView.snapshotView(afterScreenUpdates: true)
+        snapshotView?.tag = semiModalScreenshotTag
+        
+        screenshotContainer.addSubview(snapshotView!)
         
         if optionForKey(.pushParentBack) as! Bool {
-            snapshotView.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
+            snapshotView?.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
         }
         
         screenshotContainer.isHidden = false
         semiView?.isHidden = false
         
-        return snapshotView
+        return snapshotView!
     }
     
     func interfaceOrientationDidChange(_ notification: Notification) {
