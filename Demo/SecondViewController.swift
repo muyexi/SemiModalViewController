@@ -19,8 +19,8 @@ class SecondViewController: UIViewController {
 
         presentSemiViewController(controller, options: options, completion: {
             print("Completed!")
-            }, dismissBlock: {
-                print("Dismissed!")
+        }, dismissBlock: {
+            print("Dismissed!")
         })
     }
 }
