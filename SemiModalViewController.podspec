@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
   s.name         = 'SemiModalViewController'
-  s.version      = '0.2'
+  s.version      = '0.3'
   s.platform 	   = :ios, '8.0'
-  s.summary      = 'Swift Port of KNSemiModalViewController'
+  s.summary      = 'Present view / view controller as bottom-half modal'
   s.license      = 'MIT'
   s.homepage     = 'https://github.com/muyexi/SemiModalViewController'
   s.author       = { 'muyexi' => 'muyexi@gmail.com' }
