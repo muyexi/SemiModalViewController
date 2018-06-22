@@ -12,28 +12,28 @@ Swift Port of [KNSemiModalViewController](https://github.com/kentnguyen/KNSemiMo
 
 ### CocoaPods
 
-```swift
+```ruby
 pod 'SemiModalViewController'
 ```
 
 ## Usage
 
-Present view controller:
+Present a view controller:
 
 ```swift
 let options = [
-    SemiModalOptionKey.PushParentBack.rawValue: true
+    SemiModalOption.pushParentBack: true
 ]
 
-let controller = SecondViewController()
+let controller = UIViewController()
 
 controller.view.height = 200
 controller.view.backgroundColor = UIColor.redColor()
 
 presentSemiViewController(controller, options: options, completion: {
     print("Completed!")
-    }, dismissBlock: {
-        print("Dismissed!")
+}, dismissBlock: {
+    print("Dismissed!")
 })
 ```
 
@@ -52,14 +52,14 @@ presentSemiView(view, options: options) {
 Default options:
 
 ```swift
-SemiModalOptionKey.TraverseParentHierarchy.rawValue : true,
-SemiModalOptionKey.PushParentBack.rawValue          : false,
-SemiModalOptionKey.AnimationDuration.rawValue       : 0.5,
-SemiModalOptionKey.ParentAlpha.rawValue             : 0.5,
-SemiModalOptionKey.ParentScale.rawValue             : 0.8,
-SemiModalOptionKey.ShadowOpacity.rawValue           : 0.5,
-SemiModalOptionKey.TransitionStyle.rawValue         : SemiModalTransitionStyle.SlideUp.rawValue,
-SemiModalOptionKey.DisableCancel.rawValue           : true
+SemiModalOption.traverseParentHierarchy : true,
+SemiModalOption.pushParentBack          : false,
+SemiModalOption.animationDuration       : 0.5,
+SemiModalOption.parentAlpha             : 0.5,
+SemiModalOption.parentScale             : 0.8,
+SemiModalOption.shadowOpacity           : 0.5,
+SemiModalOption.transitionStyle         : .slideUp,
+SemiModalOption.disableCancel           : true
 ```
 
 ## License
