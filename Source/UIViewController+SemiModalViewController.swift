@@ -97,6 +97,8 @@ extension UIViewController {
         
         if UIDevice.isPad() {
             view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        } else {
+            view.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
         }
         
         view.tag = semiModalModalViewTag
