@@ -22,13 +22,68 @@ extension UIViewController {
     }
     
     func optionForKey(_ optionKey: SemiModalOption) -> Any? {
-        let options = objc_getAssociatedObject(self, &CustomOptions) as? [SemiModalOption: Any]
-      
-        if options?[optionKey] != nil {
-            return options?[optionKey]
-        } else {
+        guard let options = objc_getAssociatedObject(self, &CustomOptions) as? [SemiModalOption: Any]
+            , let value = options[optionKey]  else {
             return defaultOptions[optionKey]
         }
+      
+        switch optionKey {
+        case .traverseParentHierarchy:
+            if let value = value as? Bool {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .pushParentBack:
+            if let value = value as? Bool {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .animationDuration:
+            if let value = value as? TimeInterval {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .parentAlpha:
+            if let value = value as? Double {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .parentScale:
+            if let value = value as? Double {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .shadowOpacity:
+            if let value = value as? Double {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .transitionStyle:
+            if let value = value as? SemiModalTransitionStyle {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .disableCancel:
+            if let value = value as? Bool {
+                return value
+            }else{
+                return defaultOptions[optionKey]!
+            }
+        case .backgroundView:
+            if let value = value as? UIView {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        }
+        
     }
 
 }
