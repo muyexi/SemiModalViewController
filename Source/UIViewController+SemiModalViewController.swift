@@ -172,11 +172,11 @@ extension UIViewController {
         addOrUpdateParentScreenshotInView(overlay)
     }
     
-    @objc func dismissSemiModalView() {
+    @objc public func dismissSemiModalView() {
         dismissSemiModalViewWithCompletion(nil)
     }
     
-    func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
+    public func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
         let targetView = parentTargetView()
         guard let modal = targetView.viewWithTag(semiModalModalViewTag)
             , let overlay = targetView.viewWithTag(semiModalOverlayTag)
