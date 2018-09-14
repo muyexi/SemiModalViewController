@@ -149,27 +149,27 @@ extension UIViewController {
         screenshotContainer.isHidden = true
         semiView?.isHidden = true
         
-        var snapshotView = screenshotContainer.viewWithTag(semiModalScreenshotTag)
-        snapshotView?.removeFromSuperview()
+        var snapshotView = screenshotContainer.viewWithTag(semiModalScreenshotTag) ?? UIView()
+        snapshotView.removeFromSuperview()
         
-        snapshotView = targetView.snapshotView(afterScreenUpdates: true)
-        snapshotView?.tag = semiModalScreenshotTag
+        snapshotView = targetView.snapshotView(afterScreenUpdates: true) ?? UIView()
+        snapshotView.tag = semiModalScreenshotTag
         
-        screenshotContainer.addSubview(snapshotView!)
+        screenshotContainer.addSubview(snapshotView)
         
         if optionForKey(.pushParentBack) as! Bool {
-            snapshotView?.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
+            snapshotView.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
         }
         
         screenshotContainer.isHidden = false
         semiView?.isHidden = false
         
-        return snapshotView!
+        return snapshotView
     }
     
     @objc func interfaceOrientationDidChange(_ notification: Notification) {
-        let overlay = parentTargetView().viewWithTag(semiModalOverlayTag)
-        addOrUpdateParentScreenshotInView(overlay!)
+        guard let overlay = parentTargetView().viewWithTag(semiModalOverlayTag) else { return }
+        addOrUpdateParentScreenshotInView(overlay)
     }
     
     @objc func dismissSemiModalView() {
@@ -178,11 +178,11 @@ extension UIViewController {
     
     func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
         let targetView = parentTargetView()
-        let modal = targetView.viewWithTag(semiModalModalViewTag)!
-        let overlay = targetView.viewWithTag(semiModalOverlayTag)!
+        guard let modal = targetView.viewWithTag(semiModalModalViewTag)
+            , let overlay = targetView.viewWithTag(semiModalOverlayTag)
+            , let transitionStyle = optionForKey(.transitionStyle) as? SemiModalTransitionStyle
+            , let duration = optionForKey(.animationDuration) as? TimeInterval else { return }
         
-        let transitionStyle = optionForKey(.transitionStyle) as! SemiModalTransitionStyle
-        let duration = optionForKey(.animationDuration) as! TimeInterval
         
         let vc = objc_getAssociatedObject(self, &semiModalViewController) as? UIViewController
         let dismissBlock = (objc_getAssociatedObject(self, &semiModalDismissBlock) as? ClosureWrapper)?.closure
@@ -216,19 +216,20 @@ extension UIViewController {
             NotificationCenter.default.removeObserver(self, name: .UIDeviceOrientationDidChange, object: nil)
         }) 
         
-        let screenshot = overlay.subviews.first!
-        if optionForKey(.pushParentBack) as! Bool {
-            screenshot.layer.add(animationGroupForward(false), forKey: "bringForwardAnimation")
-        }
-        
-        UIView.animate(withDuration: duration, animations: { 
-            screenshot.alpha = 1
+        if let screenshot = overlay.subviews.first {
+            if let pushParentBack = optionForKey(.pushParentBack) as? Bool , pushParentBack {
+                screenshot.layer.add(animationGroupForward(false), forKey: "bringForwardAnimation")
+            }
+            UIView.animate(withDuration: duration, animations: {
+                screenshot.alpha = 1
             }, completion: { finished in
                 if finished {
                     NotificationCenter.default.post(name: .semiModalDidHide, object: self)
                     completion?()
                 }
-        }) 
+            })
+        }
+
     }
     
     func animationGroupForward(_ forward: Bool) -> CAAnimationGroup {
