@@ -45,8 +45,8 @@ extension UIViewController {
         targetParentVC.addChildViewController(vc)
         vc.beginAppearanceTransition(true, animated: true)
         
-        objc_setAssociatedObject(self, &semiModalViewController, vc, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        objc_setAssociatedObject(targetParentVC, &semiModalViewController, vc, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(targetParentVC, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), .OBJC_ASSOCIATION_COPY_NONATOMIC)
     
         presentSemiView(vc.view, options: options) {
             vc.didMove(toParentViewController: targetParentVC)
@@ -177,15 +177,17 @@ extension UIViewController {
     }
     
     public func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
-        let targetView = parentTargetView()
-        guard let modal = targetView.viewWithTag(semiModalModalViewTag)
+        let targetVC = parentTargetViewController()
+        
+        guard let targetView = targetVC.view
+            , let modal = targetView.viewWithTag(semiModalModalViewTag)
             , let overlay = targetView.viewWithTag(semiModalOverlayTag)
             , let transitionStyle = optionForKey(.transitionStyle) as? SemiModalTransitionStyle
             , let duration = optionForKey(.animationDuration) as? TimeInterval else { return }
         
         
-        let vc = objc_getAssociatedObject(self, &semiModalViewController) as? UIViewController
-        let dismissBlock = (objc_getAssociatedObject(self, &semiModalDismissBlock) as? ClosureWrapper)?.closure
+        let vc = objc_getAssociatedObject(targetVC, &semiModalViewController) as? UIViewController
+        let dismissBlock = (objc_getAssociatedObject(targetVC, &semiModalDismissBlock) as? ClosureWrapper)?.closure
         
         vc?.willMove(toParentViewController: nil)
         vc?.beginAppearanceTransition(false, animated: true)
@@ -210,8 +212,8 @@ extension UIViewController {
             
             dismissBlock?()
             
-            objc_setAssociatedObject(self, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-            objc_setAssociatedObject(self, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(targetVC, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(targetVC, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             NotificationCenter.default.removeObserver(self, name: .UIDeviceOrientationDidChange, object: nil)
         }) 

@@ -18,13 +18,24 @@ extension UIViewController {
     }
   
     func registerOptions(_ options: [SemiModalOption: Any]?) {
-        objc_setAssociatedObject(self, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+        // options always save in parent viewController
+        var targetVC: UIViewController = self
+        while targetVC.parent != nil {
+            targetVC = targetVC.parent!
+        }
+        
+        objc_setAssociatedObject(targetVC, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
     
     func optionForKey(_ optionKey: SemiModalOption) -> Any? {
-        guard let options = objc_getAssociatedObject(self, &CustomOptions) as? [SemiModalOption: Any]
+        var targetVC: UIViewController = self
+        while targetVC.parent != nil {
+            targetVC = targetVC.parent!
+        }
+        
+        guard let options = objc_getAssociatedObject(targetVC, &CustomOptions) as? [SemiModalOption: Any]
             , let value = options[optionKey]  else {
-            return defaultOptions[optionKey]
+                return defaultOptions[optionKey]
         }
       
         switch optionKey {
