@@ -18,17 +18,83 @@ extension UIViewController {
     }
   
     func registerOptions(_ options: [SemiModalOption: Any]?) {
-        objc_setAssociatedObject(self, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+        // options always save in parent viewController
+        var targetVC: UIViewController = self
+        while targetVC.parent != nil {
+            targetVC = targetVC.parent!
+        }
+        
+        objc_setAssociatedObject(targetVC, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
     
     func optionForKey(_ optionKey: SemiModalOption) -> Any? {
-        let options = objc_getAssociatedObject(self, &CustomOptions) as? [SemiModalOption: Any]
-      
-        if options?[optionKey] != nil {
-            return options?[optionKey]
-        } else {
-            return defaultOptions[optionKey]
+        var targetVC: UIViewController = self
+        while targetVC.parent != nil {
+            targetVC = targetVC.parent!
         }
+        
+        guard let options = objc_getAssociatedObject(targetVC, &CustomOptions) as? [SemiModalOption: Any]
+            , let value = options[optionKey]  else {
+                return defaultOptions[optionKey]
+        }
+      
+        switch optionKey {
+        case .traverseParentHierarchy:
+            if let value = value as? Bool {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .pushParentBack:
+            if let value = value as? Bool {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .animationDuration:
+            if let value = value as? TimeInterval {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .parentAlpha:
+            if let value = value as? Double {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .parentScale:
+            if let value = value as? Double {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .shadowOpacity:
+            if let value = value as? Double {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .transitionStyle:
+            if let value = value as? SemiModalTransitionStyle {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        case .disableCancel:
+            if let value = value as? Bool {
+                return value
+            }else{
+                return defaultOptions[optionKey]!
+            }
+        case .backgroundView:
+            if let value = value as? UIView {
+                return value
+            }else{
+                return defaultOptions[optionKey]
+            }
+        }
+        
     }
 
 }
