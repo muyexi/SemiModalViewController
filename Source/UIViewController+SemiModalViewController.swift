@@ -194,12 +194,8 @@ extension UIViewController {
         
         UIView.animate(withDuration: duration, animations: {
             if transitionStyle == .slideUp {
-                if UIDevice.isPad() {
-                    modal.frame = CGRect(x: (targetView.width - modal.width) / 2, y: targetView.height,
-                        width: modal.width, height: modal.height)
-                } else {
-                    modal.frame = CGRect(x: 0, y: targetView.height, width: modal.width, height: modal.height)
-                }
+                let originX = UIDevice.isPad() ? (targetView.width - modal.width) / 2 : 0
+                modal.frame = CGRect(x: originX, y: targetView.height, width: modal.width, height: modal.height)
             } else if transitionStyle == .fadeOut || transitionStyle == .fadeInOut {
                 modal.alpha = 0.0
             }
@@ -239,23 +235,17 @@ extension UIViewController {
         id1.m34 = 1.0 / -900
         id1 = CATransform3DScale(id1, 0.95, 0.95, 1)
         
-        if UIDevice.isPad() {
-            id1 = CATransform3DRotate(id1, 7.5 * CGFloat(Double.pi) / 180.0, 1, 0, 0)
-        } else {
-            id1 = CATransform3DRotate(id1, 15.0 * CGFloat(Double.pi) / 180.0, 1, 0, 0)
-        }
+        let angleFactor: CGFloat = UIDevice.isPad() ? 7.5 : 15.0
+        id1 = CATransform3DRotate(id1, angleFactor * CGFloat(Double.pi) / 180.0, 1, 0, 0)
         
         var id2 = CATransform3DIdentity
         id2.m34 = id1.m34
         
         let scale = CGFloat(optionForKey(.parentScale) as! Double)
-        if UIDevice.isPad() {
-            id2 = CATransform3DTranslate(id2, 0, parentTargetView().height * -0.04, 0)
-            id2 = CATransform3DScale(id2, scale, scale, 1)
-        } else {
-            id2 = CATransform3DTranslate(id2, 0, parentTargetView().height * -0.08, 0)
-            id2 = CATransform3DScale(id2, scale, scale, 1)
-        }
+        let tzFactor: CGFloat = UIDevice.isPad() ? -0.04 : -0.08
+        
+        id2 = CATransform3DTranslate(id2, 0, parentTargetView().height * tzFactor, 0)
+        id2 = CATransform3DScale(id2, scale, scale, 1)
         
         let animation = CABasicAnimation(keyPath: "transform")
         animation.toValue = NSValue(caTransform3D: id1)
