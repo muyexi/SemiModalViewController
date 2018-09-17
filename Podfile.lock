@@ -1,23 +1,16 @@
 PODS:
-  - Reveal-SDK (15)
-  - SemiModalViewController (0.2)
+  - SemiModalViewController (0.3)
 
 DEPENDENCIES:
-  - Reveal-SDK
   - SemiModalViewController (from `./`)
-
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - Reveal-SDK
 
 EXTERNAL SOURCES:
   SemiModalViewController:
     :path: "./"
 
 SPEC CHECKSUMS:
-  Reveal-SDK: 25e21896c478b60b948f876043f91570d368d23d
-  SemiModalViewController: 9b7b6c9c3f3d20de33ea117f30e6823045be2ec9
+  SemiModalViewController: dc17361205906ae46cb45d23543c594b0589a254
 
-PODFILE CHECKSUM: 992ee24e0e14eb94e408ee3838c731317598347c
+PODFILE CHECKSUM: 7a75cd15e7190183aa62892cb568390740ff2e74
 
 COCOAPODS: 1.5.3
