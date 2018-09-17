@@ -39,13 +39,7 @@ extension UIViewController {
         }
       
         switch optionKey {
-        case .traverseParentHierarchy:
-            if let value = value as? Bool {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .pushParentBack:
+        case .traverseParentHierarchy, .pushParentBack, .disableCancel:
             if let value = value as? Bool {
                 return value
             }else{
@@ -57,19 +51,7 @@ extension UIViewController {
             }else{
                 return defaultOptions[optionKey]
             }
-        case .parentAlpha:
-            if let value = value as? Double {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .parentScale:
-            if let value = value as? Double {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .shadowOpacity:
+        case .parentAlpha, .parentScale, .shadowOpacity:
             if let value = value as? Double {
                 return value
             }else{
@@ -80,12 +62,6 @@ extension UIViewController {
                 return value
             }else{
                 return defaultOptions[optionKey]
-            }
-        case .disableCancel:
-            if let value = value as? Bool {
-                return value
-            }else{
-                return defaultOptions[optionKey]!
             }
         case .backgroundView:
             if let value = value as? UIView {
