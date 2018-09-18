@@ -20,6 +20,7 @@
 		8D4B7D561D853F1B0013459B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D4B7D4E1D853F1B0013459B /* Main.storyboard */; };
 		8D4B7D571D853F1B0013459B /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4B7D501D853F1B0013459B /* FirstViewController.swift */; };
 		8D4B7D591D853F1B0013459B /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4B7D521D853F1B0013459B /* SecondViewController.swift */; };
+		8D76E7152150D0320019CC99 /* SemiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D76E7142150D0320019CC99 /* SemiViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		8D4B7D511D853F1B0013459B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D4B7D521D853F1B0013459B /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		8D642E6E1D79758E00C45795 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D76E7142150D0320019CC99 /* SemiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemiViewController.swift; sourceTree = "<group>"; };
 		BF8C779DD9D1680FE694014C /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		D8742E3B9E9E66188D37018C /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC450E88D8C6359EF36F028C /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 		8D4B7D491D853F1B0013459B /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				8D76E7142150D0320019CC99 /* SemiViewController.swift */,
 				8D4B7D4A1D853F1B0013459B /* AppDelegate.swift */,
 				8D4B7D4B1D853F1B0013459B /* Assets.xcassets */,
 				8D4B7D4C1D853F1B0013459B /* LaunchScreen.storyboard */,
@@ -234,6 +237,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D76E7152150D0320019CC99 /* SemiViewController.swift in Sources */,
 				8D4B7D461D853DE80013459B /* UIView+SemiModalViewController.swift in Sources */,
 				8D4B7D441D853DE80013459B /* UIDevice+SemiModalViewController.swift in Sources */,
 				8D4B7D431D853DE80013459B /* ClosureWrapper.swift in Sources */,

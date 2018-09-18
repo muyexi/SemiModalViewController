@@ -73,6 +73,37 @@
             </objects>
             <point key="canvasLocation" x="750" y="360"/>
         </scene>
+        <!--Semi View Controller-->
+        <scene sceneID="gBQ-dE-y2o">
+            <objects>
+                <viewController storyboardIdentifier="SemiViewController" id="adr-16-RZd" customClass="SemiViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Idh-iG-MRu"/>
+                        <viewControllerLayoutGuide type="bottom" id="OGV-wU-MU2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="EIs-ZN-W3Y">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S6w-oO-MBj">
+                                <rect key="frame" x="160" y="318.5" width="54" height="30"/>
+                                <state key="normal" title="Dismiss"/>
+                                <connections>
+                                    <action selector="dismiss:" destination="adr-16-RZd" eventType="touchUpInside" id="97s-yT-Vve"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="S6w-oO-MBj" firstAttribute="centerY" secondItem="EIs-ZN-W3Y" secondAttribute="centerY" id="R6C-X5-JBU"/>
+                            <constraint firstItem="S6w-oO-MBj" firstAttribute="centerX" secondItem="EIs-ZN-W3Y" secondAttribute="centerX" id="kqk-z9-aZF"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PoW-ah-VZl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1569" y="359"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>

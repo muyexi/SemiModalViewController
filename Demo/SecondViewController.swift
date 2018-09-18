@@ -12,7 +12,9 @@ class SecondViewController: UIViewController {
             SemiModalOption.pushParentBack: false
         ]
         
-        let controller = UIViewController()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let identifier = String(describing: SemiViewController.self)
+        let controller = storyboard.instantiateViewController(withIdentifier: identifier)
         
         controller.view.height = 200
         controller.view.backgroundColor = UIColor.red
