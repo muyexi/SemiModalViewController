@@ -2,7 +2,7 @@
 [![CocoaPods](https://img.shields.io/cocoapods/v/SemiModalViewController.svg?maxAge=2592000)](muyexi)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/muyexi/SemiModalViewController/blob/master/LICENSE)
 
-Swift Port of [KNSemiModalViewController](https://github.com/kentnguyen/KNSemiModalViewController), present view / view controller as bottom-half modal.
+`UIViewController` extension to present view / view controller as bottom-half modal. 
 
 <p align="center">
   <img src="Demo.gif" width="30%">
@@ -49,6 +49,12 @@ presentSemiView(view, options: options) {
 }
 ```
 
+Dismiss a presented view / view controller:
+
+```swift
+dismissSemiModalView()
+```
+
 Default options:
 
 ```swift
@@ -61,6 +67,10 @@ SemiModalOption.shadowOpacity           : 0.5,
 SemiModalOption.transitionStyle         : .slideUp,
 SemiModalOption.disableCancel           : true
 ```
+
+## Credits
+
+SemiModalViewController is based on [KNSemiModalViewController](https://github.com/kentnguyen/KNSemiModalViewController).
 
 ## License
 
