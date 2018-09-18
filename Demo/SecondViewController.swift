@@ -8,7 +8,7 @@ class SecondViewController: UIViewController {
     }
 
     @IBAction func show(_ sender: AnyObject) {
-        let options = [
+        let options: [SemiModalOption : Any] = [
             SemiModalOption.pushParentBack: false
         ]
         

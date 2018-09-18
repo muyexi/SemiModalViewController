@@ -12,7 +12,7 @@ class FirstViewController: UIViewController {
         view.height = 300
         view.backgroundColor = UIColor.red
         
-        let options = [
+        let options: [SemiModalOption : Any] = [
             SemiModalOption.pushParentBack: true
         ]
         
