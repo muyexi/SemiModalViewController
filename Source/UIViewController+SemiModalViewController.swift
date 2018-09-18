@@ -59,14 +59,15 @@ extension UIViewController {
     public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]? = nil, completion: (() -> Void)? = nil) {
         registerOptions(options)
         let targetView = parentTargetView()
-        
+        let targetParentVC = parentTargetViewController()
+
         if targetView.subviews.contains(view) {
             return
         }
         
         objc_setAssociatedObject(view, &semiModalPresentingViewController, self, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
-        NotificationCenter.default.addObserver(self,
+        NotificationCenter.default.addObserver(targetParentVC,
                                                selector: #selector(interfaceOrientationDidChange(_:)),
                                                name: .UIDeviceOrientationDidChange,
                                                object: nil)
@@ -169,7 +170,9 @@ extension UIViewController {
     
     @objc func interfaceOrientationDidChange(_ notification: Notification) {
         guard let overlay = parentTargetView().viewWithTag(semiModalOverlayTag) else { return }
-        addOrUpdateParentScreenshotInView(overlay)
+        let view = addOrUpdateParentScreenshotInView(overlay)
+        view.alpha = CGFloat(self.optionForKey(.parentAlpha) as! Double)
+    
     }
     
     @objc public func dismissSemiModalView() {
@@ -215,7 +218,7 @@ extension UIViewController {
             objc_setAssociatedObject(targetVC, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
             objc_setAssociatedObject(targetVC, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            NotificationCenter.default.removeObserver(self, name: .UIDeviceOrientationDidChange, object: nil)
+            NotificationCenter.default.removeObserver(targetVC, name: .UIDeviceOrientationDidChange, object: nil)
         }) 
         
         if let screenshot = overlay.subviews.first {
