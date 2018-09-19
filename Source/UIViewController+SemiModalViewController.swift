@@ -42,14 +42,14 @@ extension UIViewController {
         registerOptions(options)
         let targetParentVC = parentTargetViewController()
         
-        targetParentVC.addChildViewController(vc)
+        targetParentVC.addChild(vc)
         vc.beginAppearanceTransition(true, animated: true)
         
         objc_setAssociatedObject(targetParentVC, &semiModalViewController, vc, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(targetParentVC, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), .OBJC_ASSOCIATION_COPY_NONATOMIC)
     
         presentSemiView(vc.view, options: options) {
-            vc.didMove(toParentViewController: targetParentVC)
+            vc.didMove(toParent: targetParentVC)
             vc.endAppearanceTransition()
             
             completion?()
@@ -69,7 +69,7 @@ extension UIViewController {
         
         NotificationCenter.default.addObserver(targetParentVC,
                                                selector: #selector(interfaceOrientationDidChange(_:)),
-                                               name: .UIDeviceOrientationDidChange,
+                                               name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
         
         let semiViewHeight = view.frame.size.height
@@ -192,7 +192,7 @@ extension UIViewController {
         let vc = objc_getAssociatedObject(targetVC, &semiModalViewController) as? UIViewController
         let dismissBlock = (objc_getAssociatedObject(targetVC, &semiModalDismissBlock) as? ClosureWrapper)?.closure
         
-        vc?.willMove(toParentViewController: nil)
+        vc?.willMove(toParent: nil)
         vc?.beginAppearanceTransition(false, animated: true)
         
         UIView.animate(withDuration: duration, animations: {
@@ -206,7 +206,7 @@ extension UIViewController {
             overlay.removeFromSuperview()
             modal.removeFromSuperview()
             
-            vc?.removeFromParentViewController()
+            vc?.removeFromParent()
             vc?.endAppearanceTransition()
             
             dismissBlock?()
@@ -214,7 +214,7 @@ extension UIViewController {
             objc_setAssociatedObject(targetVC, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
             objc_setAssociatedObject(targetVC, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            NotificationCenter.default.removeObserver(targetVC, name: .UIDeviceOrientationDidChange, object: nil)
+            NotificationCenter.default.removeObserver(targetVC, name: UIDevice.orientationDidChangeNotification, object: nil)
         }) 
         
         if let screenshot = overlay.subviews.first {
@@ -255,19 +255,19 @@ extension UIViewController {
         
         let duration = optionForKey(.animationDuration) as! Double
         animation.duration = duration / 2
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = CAMediaTimingFillMode.forwards
         animation.isRemovedOnCompletion = false
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
         
         let animation2 = CABasicAnimation(keyPath: "transform")
         animation2.toValue = NSValue(caTransform3D: forward ? id2 : CATransform3DIdentity)
         animation2.beginTime = animation.duration
         animation2.duration = animation.duration
-        animation2.fillMode = kCAFillModeForwards
+        animation2.fillMode = CAMediaTimingFillMode.forwards
         animation2.isRemovedOnCompletion = false
         
         let group = CAAnimationGroup()
-        group.fillMode = kCAFillModeForwards
+        group.fillMode = CAMediaTimingFillMode.forwards
         group.isRemovedOnCompletion = false
         group.duration = animation.duration * 2
         group.animations = [animation, animation2]
