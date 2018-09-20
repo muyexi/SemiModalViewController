@@ -159,7 +159,10 @@ extension UIViewController {
         screenshotContainer.addSubview(snapshotView)
         
         if optionForKey(.pushParentBack) as! Bool {
-            snapshotView.layer.add(self.animationGroupForward(true), forKey: "pushedBackAnimation")
+            let animationGroup = PushBackAnimationGroup(forward: true,
+                                                        viewHeight: parentTargetView().height,
+                                                        options: self.options())
+            snapshotView.layer.add(animationGroup, forKey: "pushedBackAnimation")
         }
         
         screenshotContainer.isHidden = false
@@ -219,7 +222,10 @@ extension UIViewController {
         
         if let screenshot = overlay.subviews.first {
             if let pushParentBack = optionForKey(.pushParentBack) as? Bool , pushParentBack {
-                screenshot.layer.add(animationGroupForward(false), forKey: "bringForwardAnimation")
+                let animationGroup = PushBackAnimationGroup(forward: false,
+                                                            viewHeight: parentTargetView().height,
+                                                            options: self.options())
+                screenshot.layer.add(animationGroup, forKey: "bringForwardAnimation")
             }
             UIView.animate(withDuration: duration, animations: {
                 screenshot.alpha = 1
@@ -233,48 +239,6 @@ extension UIViewController {
 
     }
     
-    func animationGroupForward(_ forward: Bool) -> CAAnimationGroup {
-        var id1 = CATransform3DIdentity
-        id1.m34 = 1.0 / -900
-        id1 = CATransform3DScale(id1, 0.95, 0.95, 1)
-        
-        let angleFactor: CGFloat = UIDevice.isPad() ? 7.5 : 15.0
-        id1 = CATransform3DRotate(id1, angleFactor * CGFloat(Double.pi) / 180.0, 1, 0, 0)
-        
-        var id2 = CATransform3DIdentity
-        id2.m34 = id1.m34
-        
-        let scale = CGFloat(optionForKey(.parentScale) as! Double)
-        let tzFactor: CGFloat = UIDevice.isPad() ? -0.04 : -0.08
-        
-        id2 = CATransform3DTranslate(id2, 0, parentTargetView().height * tzFactor, 0)
-        id2 = CATransform3DScale(id2, scale, scale, 1)
-        
-        let animation = CABasicAnimation(keyPath: "transform")
-        animation.toValue = NSValue(caTransform3D: id1)
-        
-        let duration = optionForKey(.animationDuration) as! Double
-        animation.duration = duration / 2
-        animation.fillMode = CAMediaTimingFillMode.forwards
-        animation.isRemovedOnCompletion = false
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        
-        let animation2 = CABasicAnimation(keyPath: "transform")
-        animation2.toValue = NSValue(caTransform3D: forward ? id2 : CATransform3DIdentity)
-        animation2.beginTime = animation.duration
-        animation2.duration = animation.duration
-        animation2.fillMode = CAMediaTimingFillMode.forwards
-        animation2.isRemovedOnCompletion = false
-        
-        let group = CAAnimationGroup()
-        group.fillMode = CAMediaTimingFillMode.forwards
-        group.isRemovedOnCompletion = false
-        group.duration = animation.duration * 2
-        group.animations = [animation, animation2]
-        
-        return group
-    }
-
     func overlayView() -> UIView {
         var overlay: UIView
         if let backgroundView = optionForKey(.backgroundView) as? UIView {

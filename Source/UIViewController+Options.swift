@@ -24,19 +24,28 @@ extension UIViewController {
             targetVC = targetVC.parent!
         }
         
-        objc_setAssociatedObject(targetVC, &CustomOptions, options, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+        objc_setAssociatedObject(targetVC, &CustomOptions, options, .OBJC_ASSOCIATION_RETAIN)
     }
     
-    func optionForKey(_ optionKey: SemiModalOption) -> Any? {
+    func options() -> [SemiModalOption: Any] {
         var targetVC: UIViewController = self
         while targetVC.parent != nil {
             targetVC = targetVC.parent!
         }
         
-        guard let options = objc_getAssociatedObject(targetVC, &CustomOptions) as? [SemiModalOption: Any]
-            , let value = options[optionKey]  else {
-                return defaultOptions[optionKey]
+        if let options = objc_getAssociatedObject(targetVC, &CustomOptions) as? [SemiModalOption: Any] {
+            var defaultOptions: [SemiModalOption: Any] = self.defaultOptions
+            defaultOptions.merge(options) { (_, new) in new }
+            
+            return defaultOptions
+        } else {
+            return defaultOptions
         }
+    }
+    
+    func optionForKey(_ optionKey: SemiModalOption) -> Any? {
+        let options = self.options()
+        let value = options[optionKey]
       
         switch optionKey {
         case .traverseParentHierarchy, .pushParentBack, .disableCancel:

@@ -1,4 +1,5 @@
 import UIKit
+import SemiModalViewController
 
 class SecondViewController: UIViewController {
 
@@ -16,7 +17,7 @@ class SecondViewController: UIViewController {
         let identifier = String(describing: SemiViewController.self)
         let controller = storyboard.instantiateViewController(withIdentifier: identifier)
         
-        controller.view.height = 200
+        controller.view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 200)
         controller.view.backgroundColor = UIColor.red
 
         presentSemiViewController(controller, options: options, completion: {

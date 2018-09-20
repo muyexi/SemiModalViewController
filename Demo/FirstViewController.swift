@@ -1,4 +1,5 @@
 import UIKit
+import SemiModalViewController
 
 class FirstViewController: UIViewController {
     
@@ -9,7 +10,7 @@ class FirstViewController: UIViewController {
 
     @IBAction func show(_ sender: AnyObject) {
         let view = UIView(frame: UIScreen.main.bounds)
-        view.height = 300
+        view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
         view.backgroundColor = UIColor.red
         
         let options: [SemiModalOption : Any] = [
