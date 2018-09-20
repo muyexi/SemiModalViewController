@@ -46,40 +46,17 @@ extension UIViewController {
     func optionForKey(_ optionKey: SemiModalOption) -> Any? {
         let options = self.options()
         let value = options[optionKey]
-      
-        switch optionKey {
-        case .traverseParentHierarchy, .pushParentBack, .disableCancel:
-            if let value = value as? Bool {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .animationDuration:
-            if let value = value as? TimeInterval {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .parentAlpha, .parentScale, .shadowOpacity:
-            if let value = value as? Double {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .transitionStyle:
-            if let value = value as? SemiModalTransitionStyle {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        case .backgroundView:
-            if let value = value as? UIView {
-                return value
-            }else{
-                return defaultOptions[optionKey]
-            }
-        }
         
+        let isValidType = value is Bool ||
+            value is Double ||
+            value is SemiModalTransitionStyle ||
+            value is UIView
+        
+        if isValidType {
+            return value
+        } else {
+            return defaultOptions[optionKey]
+        }
     }
 
 }
