@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SemiModalViewController'
-  s.version      = '0.4'
+  s.version      = '0.5'
   s.platform 	   = :ios, '8.0'
   s.summary      = 'Present view / view controller as bottom-half modal'
   s.license      = 'MIT'
@@ -8,4 +8,5 @@ Pod::Spec.new do |s|
   s.author       = { 'muyexi' => 'muyexi@gmail.com' }
   s.source       = { :git => 'https://github.com/muyexi/SemiModalViewController.git', :tag => s.version }
   s.source_files = 'Source/*.swift'
+  s.swift_version = '4.2'
 end
