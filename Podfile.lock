@@ -1,5 +1,5 @@
 PODS:
-  - SemiModalViewController (0.4)
+  - SemiModalViewController (1.0.0)
 
 DEPENDENCIES:
   - SemiModalViewController (from `./`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  SemiModalViewController: 8f0e031f3cc58057725ee65ed9f58aada09290ed
+  SemiModalViewController: 6f046ecf0ff1ceb84fd2a2f53251cfdf72b8dbd6
 
 PODFILE CHECKSUM: 7a75cd15e7190183aa62892cb568390740ff2e74
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.3

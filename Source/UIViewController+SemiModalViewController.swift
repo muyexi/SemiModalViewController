@@ -153,7 +153,8 @@ extension UIViewController {
         var snapshotView = screenshotContainer.viewWithTag(semiModalScreenshotTag) ?? UIView()
         snapshotView.removeFromSuperview()
         
-        snapshotView = targetView.snapshotView(afterScreenUpdates: true) ?? UIView()
+        let image = targetView.asImage()
+        snapshotView = UIImageView(image: image)
         snapshotView.tag = semiModalScreenshotTag
         
         screenshotContainer.addSubview(snapshotView)
