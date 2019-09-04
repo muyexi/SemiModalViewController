@@ -9,7 +9,6 @@ extension Notification.Name {
 private var semiModalViewController: Void?
 private var semiModalDismissBlock: Void?
 private var semiModalPresentingViewController: Void?
-private var targetViewControllerKey: Void?
 
 private let semiModalOverlayTag = 10001
 private let semiModalScreenshotTag = 10002
@@ -62,8 +61,6 @@ extension UIViewController {
         if targetView.subviews.contains(view) {
             return
         }
-        
-        objc_setAssociatedObject(view, &semiModalPresentingViewController, self, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
         NotificationCenter.default.addObserver(targetViewController,
                                                selector: #selector(interfaceOrientationDidChange(_:)),
@@ -125,7 +122,7 @@ extension UIViewController {
     }
     
     var targetViewController: UIViewController {
-        if let viewController = objc_getAssociatedObject(self, &targetViewControllerKey) as? UIViewController {
+        if let viewController = objc_getAssociatedObject(self, &semiModalPresentingViewController) as? UIViewController {
             return viewController
         } else {
             var viewController: UIViewController = self
@@ -136,7 +133,7 @@ extension UIViewController {
                 }
             }
             
-            objc_setAssociatedObject(self, &targetViewControllerKey, viewController, .OBJC_ASSOCIATION_RETAIN)
+            objc_setAssociatedObject(self, &semiModalPresentingViewController, viewController, .OBJC_ASSOCIATION_RETAIN)
             return viewController
         }
     }
