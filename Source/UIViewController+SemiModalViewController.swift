@@ -9,6 +9,7 @@ extension Notification.Name {
 private var semiModalViewController: Void?
 private var semiModalDismissBlock: Void?
 private var semiModalPresentingViewController: Void?
+private var targetViewControllerKey: Void?
 
 private let semiModalOverlayTag = 10001
 private let semiModalScreenshotTag = 10002
@@ -40,16 +41,15 @@ extension UIViewController {
                                    completion: (() -> Void)? = nil,
                                    dismissBlock: (() -> Void)? = nil) {
         registerOptions(options)
-        let targetParentVC = parentTargetViewController()
         
-        targetParentVC.addChild(vc)
+        targetViewController.addChild(vc)
         vc.beginAppearanceTransition(true, animated: true)
         
-        objc_setAssociatedObject(targetParentVC, &semiModalViewController, vc, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(targetParentVC, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        objc_setAssociatedObject(targetViewController, &semiModalViewController, vc, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(targetViewController, &semiModalDismissBlock, ClosureWrapper(closure: dismissBlock), .OBJC_ASSOCIATION_COPY_NONATOMIC)
     
         presentSemiView(vc.view, options: options) {
-            vc.didMove(toParent: targetParentVC)
+            vc.didMove(toParent: self.targetViewController)
             vc.endAppearanceTransition()
             
             completion?()
@@ -58,8 +58,6 @@ extension UIViewController {
     
     public func presentSemiView(_ view: UIView, options: [SemiModalOption: Any]? = nil, completion: (() -> Void)? = nil) {
         registerOptions(options)
-        let targetView = parentTargetView()
-        let targetParentVC = parentTargetViewController()
 
         if targetView.subviews.contains(view) {
             return
@@ -67,7 +65,7 @@ extension UIViewController {
         
         objc_setAssociatedObject(view, &semiModalPresentingViewController, self, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
-        NotificationCenter.default.addObserver(targetParentVC,
+        NotificationCenter.default.addObserver(targetViewController,
                                                selector: #selector(interfaceOrientationDidChange(_:)),
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
@@ -126,25 +124,29 @@ extension UIViewController {
         }) 
     }
     
-    func parentTargetViewController() -> UIViewController {
-        var viewController: UIViewController = self
-        
-        if optionForKey(.traverseParentHierarchy) as! Bool {
-            while viewController.parent != nil {
-                viewController = viewController.parent!
+    var targetViewController: UIViewController {
+        if let viewController = objc_getAssociatedObject(self, &targetViewControllerKey) as? UIViewController {
+            return viewController
+        } else {
+            var viewController: UIViewController = self
+            
+            if optionForKey(.traverseParentHierarchy) as! Bool {
+                while viewController.parent != nil {
+                    viewController = viewController.parent!
+                }
             }
+            
+            objc_setAssociatedObject(self, &targetViewControllerKey, viewController, .OBJC_ASSOCIATION_RETAIN)
+            return viewController
         }
-        
-        return viewController
     }
     
-    func parentTargetView() -> UIView {
-        return parentTargetViewController().view
+    var targetView: UIView {
+        return targetViewController.view
     }
     
     @discardableResult
     func addOrUpdateParentScreenshotInView(_ screenshotContainer: UIView) -> UIView {
-        let targetView = parentTargetView()
         let semiView = targetView.viewWithTag(semiModalModalViewTag)
         
         screenshotContainer.isHidden = true
@@ -161,7 +163,7 @@ extension UIViewController {
         
         if optionForKey(.pushParentBack) as! Bool {
             let animationGroup = PushBackAnimationGroup(forward: true,
-                                                        viewHeight: parentTargetView().height,
+                                                        viewHeight: targetView.height,
                                                         options: self.options())
             snapshotView.layer.add(animationGroup, forKey: "pushedBackAnimation")
         }
@@ -173,10 +175,10 @@ extension UIViewController {
     }
     
     @objc func interfaceOrientationDidChange(_ notification: Notification) {
-        guard let overlay = parentTargetView().viewWithTag(semiModalOverlayTag) else { return }
+        guard let overlay = targetView.viewWithTag(semiModalOverlayTag) else { return }
+        
         let view = addOrUpdateParentScreenshotInView(overlay)
         view.alpha = CGFloat(self.optionForKey(.parentAlpha) as! Double)
-    
     }
     
     @objc public func dismissSemiModalView() {
@@ -184,17 +186,14 @@ extension UIViewController {
     }
     
     public func dismissSemiModalViewWithCompletion(_ completion: (() -> Void)?) {
-        let targetVC = parentTargetViewController()
+        guard let targetView = targetViewController.view,
+            let modal = targetView.viewWithTag(semiModalModalViewTag),
+            let overlay = targetView.viewWithTag(semiModalOverlayTag),
+            let transitionStyle = optionForKey(.transitionStyle) as? SemiModalTransitionStyle,
+            let duration = optionForKey(.animationDuration) as? TimeInterval else { return }
         
-        guard let targetView = targetVC.view
-            , let modal = targetView.viewWithTag(semiModalModalViewTag)
-            , let overlay = targetView.viewWithTag(semiModalOverlayTag)
-            , let transitionStyle = optionForKey(.transitionStyle) as? SemiModalTransitionStyle
-            , let duration = optionForKey(.animationDuration) as? TimeInterval else { return }
-        
-        
-        let vc = objc_getAssociatedObject(targetVC, &semiModalViewController) as? UIViewController
-        let dismissBlock = (objc_getAssociatedObject(targetVC, &semiModalDismissBlock) as? ClosureWrapper)?.closure
+        let vc = objc_getAssociatedObject(targetViewController, &semiModalViewController) as? UIViewController
+        let dismissBlock = (objc_getAssociatedObject(targetViewController, &semiModalDismissBlock) as? ClosureWrapper)?.closure
         
         vc?.willMove(toParent: nil)
         vc?.beginAppearanceTransition(false, animated: true)
@@ -215,16 +214,16 @@ extension UIViewController {
             
             dismissBlock?()
             
-            objc_setAssociatedObject(targetVC, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-            objc_setAssociatedObject(targetVC, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self.targetViewController, &semiModalDismissBlock, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(self.targetViewController, &semiModalViewController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            NotificationCenter.default.removeObserver(targetVC, name: UIDevice.orientationDidChangeNotification, object: nil)
+            NotificationCenter.default.removeObserver(self.targetViewController, name: UIDevice.orientationDidChangeNotification, object: nil)
         }) 
         
         if let screenshot = overlay.subviews.first {
             if let pushParentBack = optionForKey(.pushParentBack) as? Bool , pushParentBack {
                 let animationGroup = PushBackAnimationGroup(forward: false,
-                                                            viewHeight: parentTargetView().height,
+                                                            viewHeight: targetView.height,
                                                             options: self.options())
                 screenshot.layer.add(animationGroup, forKey: "bringForwardAnimation")
             }
