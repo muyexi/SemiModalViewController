@@ -241,23 +241,24 @@ extension UIViewController {
     }
     
     func overlayView() -> UIView {
-        var overlay: UIView
+        var view: UIView
         if let backgroundView = optionForKey(.backgroundView) as? UIView {
-            overlay = backgroundView
+            view = backgroundView
         } else {
-            overlay = UIView()
+            view = UIView()
         }
         
-        overlay.frame = parentTargetView().bounds
-        overlay.backgroundColor = UIColor.black
-        overlay.isUserInteractionEnabled = true
-        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        overlay.tag = semiModalOverlayTag
+        view.frame = targetView.bounds
+        view.backgroundColor = UIColor.black
+        view.isUserInteractionEnabled = true
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.tag = semiModalOverlayTag
         
         if optionForKey(.disableCancel) as! Bool {
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissSemiModalView))
-            overlay.addGestureRecognizer(tapGesture)
+            view.addGestureRecognizer(tapGesture)
         }
-        return overlay
+        
+        return view
     }
 }
