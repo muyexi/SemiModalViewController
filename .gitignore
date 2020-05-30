@@ -27,3 +27,4 @@ xcuserdata/
 *.xccheckout
 *.xcscmblueprint
 Pods/
+.swiftpm
