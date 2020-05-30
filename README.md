@@ -1,5 +1,6 @@
 
-[![CocoaPods](https://img.shields.io/cocoapods/v/SemiModalViewController.svg?maxAge=2592000)](muyexi)
+[![CocoaPods](https://img.shields.io/cocoapods/v/SemiModalViewController.svg?maxAge=2592000)](https://cocoapods.org/pods/SemiModalViewController)
+[![SPM](https://img.shields.io/badge/SPM-supported-DE5C43.svg?style=flat)](https://swift.org/package-manager/)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/muyexi/SemiModalViewController/blob/master/LICENSE)
 
 `UIViewController` extension to present view / view controller as bottom-half modal. 
@@ -14,6 +15,14 @@
 
 ```ruby
 pod 'SemiModalViewController'
+```
+
+### Swift Package Manager
+
+```swift
+dependencies: [
+    .Package(url: "https://github.com/muyexi/SemiModalViewController.git", majorVersion: 0)
+]
 ```
 
 ## Usage
